@@ -14,13 +14,14 @@
 		<script type="text/javascript" src="javascript/paella_player.js"></script>
 
 		<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8">
-		
+
 		<script>
 
 			// Sample implementation of the authentication URL callback.
 			// Put the callback name in config.json, auth.authCallbackName
 			function authenticationUrl(redirect) {
 				redirect = redirect ? "?redirect=" + encodeURIComponent(redirect): "";
+				console.log(redirect);
 				return "https://www.upv.es/auth" + redirect;
 			}
 
@@ -43,6 +44,8 @@
 				});
 			}
 
+
+
 			// Sample configuration to use this callbacks:
 			/*
 
@@ -54,8 +57,65 @@
 		</script>
 	</head>
 <!--	<body id="body" onload="loadStandalonePaella('playerContainer');"> -->
-    <body id="body" onload="paella.load('playerContainer',{ url:'../repository/' });">
+    <body id="body">
 		<div id="playerContainer" style="display:block;width:100%">
 		</div>
+		<script charset="utf-8">
+			//var loci = location.search.replace('?id=', '');
+			//console.log(loci);
+			// RTEST
+			function getParamValue(paramName)
+			{
+			    var url = window.location.search.substring(1); //get rid of "?" in querystring
+			    var qArray = url.split('&'); //get key-value pairs
+			    for (var i = 0; i < qArray.length; i++)
+			    {
+			        var pArr = qArray[i].split('='); //split key and value
+			        if (pArr[0] == paramName)
+			            return pArr[1]; //return value
+			    }
+			}
+			var videoResourceId = getParamValue('id');
+			console.log(videoResourceId);
+
+			var videoResourceCaptions = getParamValue('captions');
+			console.log(videoResourceCaptions);
+			// RTEST
+			var dataJSON = {
+				"metadata": {
+					"duration": 0,
+					"title": ""
+				},
+				"streams": [
+					{
+						"sources": {
+							"mp4": [
+								{
+									"src": "https://video.mhdev.man.ac.uk/weblounge-files/"+ videoResourceId,
+									"mimetype": "video/mp4",
+									"res": {
+										"w": "1280",
+										"h": "720"
+									}
+								}
+							]
+						},
+						"preview": "https://video.mhdev.man.ac.uk/weblounge-previews/"+ videoResourceId
+					}
+				],
+				"frameList": [
+				],
+				"captions": [
+					{
+						"lang": "en",
+						"text": "English",
+						"format": "vtt",
+						"url": videoResourceCaptions
+					}
+				]
+			};
+			console.log(dataJSON.streams[0].sources.mp4[0].src);
+			paella.load('playerContainer', { data:dataJSON });
+		</script>
 	</body>
 </html>
