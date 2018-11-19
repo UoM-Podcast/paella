@@ -164,7 +164,7 @@
 				let PluginClass = pluginCallback();
 				let pluginInstance = new PluginClass();
 				if (pluginInstance.getInstanceName()) {
-					paella.plugins = paella.plugins || {};
+					paella.plugins = paella.plugins || {};
 					paella.plugins[pluginInstance.getInstanceName()] = pluginInstance;
 				}
 				paella.pluginManager.registerPlugin(pluginInstance);
@@ -512,7 +512,7 @@
 		},
 		
 		setText:function(text) {
-			this.container.innerHTML = '<span class="button-text">' + text + '</span>';
+			this.container.innerHTML = '<span class="button-text">' + paella.AntiXSS.htmlEscape(text) + '</span>';
 			if (this._i) {
 				this.container.appendChild(this._i);
 			}
@@ -586,7 +586,7 @@
 		var elem = document.createElement('div');
 		elem.className = plugin.getClassName();
 		elem.id = id;
-		elem.innerHTML = '<span class="button-text">' + plugin.getText() + '</span>';
+		elem.innerHTML = '<span class="button-text">' + paella.AntiXSS.htmlEscape(plugin.getText()) + '</span>';
 		elem.setAttribute("tabindex", 1000+plugin.getIndex());
 		elem.setAttribute("alt", "");
 		elem.setAttribute("role", "button");

@@ -178,7 +178,7 @@ paella.addPlugin(function() {
 			content.appendChild(frame);
 
 			var itemWidth = $(frame).outerWidth(true);
-			content.innerHTML = '';
+			content.innerText = '';
 			$(window).mousemove(function(event) {
 				if ($(content).offset().top>event.pageY || !$(content).is(":visible") ||
 					($(content).offset().top + $(content).height())<event.pageY)
@@ -234,7 +234,7 @@ paella.addPlugin(function() {
 		    if (this.config.showCaptions === true){
 			var captionContainer = document.createElement('p');
 			captionContainer.className = "frameCaption";
-			captionContainer.innerHTML = caption || "";
+			captionContainer.innerText = caption || "";
 			frameRoot.append(captionContainer);
 			this._caption = captionContainer;
 		    }
@@ -345,7 +345,7 @@ paella.addPlugin(function() {
 				if(this._img){
 				    this._img.setAttribute('src',image);
 				    if (this.config.showCaptions === true){
-					this._caption.innerHTML = frame.caption || "";
+					this._caption.innerText = frame.caption || "";
 				    }
 				}
 				else{
