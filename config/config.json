@@ -40,7 +40,7 @@
       "color":"gray"
     }
   },
-  "defaultProfile":"presenter_presentation",
+  "defaultProfile":"manchester_presentation",
   "data":{
     "enabled":true,
     "dataDelegates":{
@@ -68,25 +68,26 @@
       "edu.harvard.dce.paella.flexSkipPlugin": {"enabled":true, "direction": "Rewind", "seconds": 10},
       "edu.harvard.dce.paella.flexSkipForwardPlugin": {"enabled":true, "direction": "Forward", "seconds": 30},
       "es.upv.paella.captionsPlugin": {"enabled":true, "searchOnCaptions":true},
-      "es.upv.paella.extendedTabAdapterPlugin": {"enabled":true},
-      "es.upv.paella.footprintsPlugin": {"enabled":false},
+      "es.upv.paella.extendedTabAdapterPlugin": {"enabled":false},
+      "es.upv.paella.footprintsPlugin": {"enabled":true},
       "es.upv.paella.frameControlPlugin":  {"enabled": true, "showFullPreview": "auto", "showCaptions":true},
       "es.upv.paella.fullScreenButtonPlugin": {"enabled":true, "reloadOnFullscreen":{ "enabled":true, "keepUserSelection":true }},
-      "es.upv.paella.helpPlugin": {"enabled":true, "langs":["en","es"]},
-      "es.upv.paella.multipleQualitiesPlugin": {"enabled":true, "showWidthRes":true},
+      "es.upv.paella.helpPlugin": {"enabled":false, "langs":["en","es"]},
+      "es.upv.paella.multipleQualitiesPlugin": {"enabled":false, "showWidthRes":true},
       "es.upv.paella.playbackRatePlugin": {"enabled":true, "availableRates": [0.75, 1, 1.25, 1.5]},
       "es.upv.paella.playPauseButtonPlugin": {"enabled":true},
-      "es.upv.paella.searchPlugin": {"enabled":true, "sortType":"time", "colorSearch":false},
-      "es.upv.paella.socialPlugin": {"enabled":true},
-      "es.upv.paella.themeChooserPlugin":  {"enabled":true},
+      "es.upv.paella.cinemaModePlugin": {"enabled":true},
+      "es.upv.paella.searchPlugin": {"enabled":false, "sortType":"time", "colorSearch":false},
+      "es.upv.paella.socialPlugin": {"enabled":false},
+      "es.upv.paella.themeChooserPlugin":  {"enabled":false},
       "es.upv.paella.viewModePlugin": { "enabled": true },
       "es.upv.paella.volumeRangePlugin":{"enabled":true, "showMasterVolume": true, "showSlaveVolume": false },
       "es.upv.paella.pipModePlugin": { "enabled":true },
-      "es.upv.paella.ratePlugin": { "enabled":true },
-      "es.upv.paella.videoZoomPlugin": { "enabled":true },
-      "es.upv.paella.audioSelector": { "enabled":true },
-      "es.upv.paella.videoZoomToolbarPlugin": { "enabled":false, "targetStreamIndex":0 },
-      "es.upv.paella.videoZoomTrack4kPlugin": { "enabled":true, "targetStreamIndex":0, "autoModeByDefault":false },
+      "es.upv.paella.ratePlugin": { "enabled":false },
+      "es.upv.paella.videoZoomPlugin": { "enabled":false },
+      "es.upv.paella.audioSelector": { "enabled":false },
+      "es.upv.paella.videoZoomToolbarPlugin": { "enabled":true, "targetStreamIndex":0 },
+      "es.upv.paella.videoZoomTrack4kPlugin": { "enabled":false, "targetStreamIndex":0, "autoModeByDefault":false },
       "es.upv.paella.airPlayPlugin": { "enabled":true },
 
       "//***** Video Overlay Button Plugins": "",
@@ -94,7 +95,7 @@
       "es.upv.paella.showEditorPlugin":{"enabled":true,"alwaysVisible":true},
       "es.upv.paella.arrowSlidesNavigatorPlugin": {"enabled": true, "showArrowsIn": "slave"},
       "es.upv.paella.videoDataPlugin": {
-        "enabled": true,
+        "enabled": false,
         "excludeLocations":[
           "paellaplayer.upv.es"
         ],
@@ -103,7 +104,7 @@
         ]
       },
       "es.upv.paella.legalPlugin": {
-		"enabled": true,
+		"enabled": false,
 		    "label": "Legal info",
 		    "position": "right",
         "legalUrl": "https://en.wikipedia.org/wiki/General_Data_Protection_Regulation"
@@ -122,19 +123,19 @@
       "es.upv.paella.translecture.captionsPlugin": {"enabled":true},
       "es.upv.paella.trimmingPlayerPlugin": {"enabled":true},
       "es.upv.paella.zoomPlugin": {"enabled": false},
-      "es.upv.paella.windowTitlePlugin": {"enabled": true},
+      "es.upv.paella.windowTitlePlugin": {"enabled": false},
       "es.upv.paella.track4kPlugin": { "enabled":true },
 
       "//**** Video profile plugins": "",
       "es.upv.paella.singleStreamProfilePlugin": {
-          "enabled": true,
+          "enabled": false,
           "videoSets": [
             { "icon":"professor_icon.svg", "id":"presenter", "content":["presenter"]},
             { "icon":"slide_icon.svg", "id":"presentation", "content":["presentation"]}
           ]
 
       },
-      "es.upv.paella.dualStreamProfilePlugin": { "enabled":true,
+      "es.upv.paella.dualStreamProfilePlugin": { "enabled":false,
         "videoSets": [
           { "icon":"slide_professor_icon.svg", "id":"presenter_presentation", "content":["presenter","presentation"] },
           { "icon":"slide_professor_icon.svg", "id":"presenter2_presentation", "content":["presenter-2","presentation"] },
@@ -142,7 +143,7 @@
         ]
       },
       "es.upv.paella.tripleStreamProfilePlugin": {
-        "enabled": true,
+        "enabled": false,
         "videoSets": [
           { "icon":"three_streams_icon.svg", "id":"presenter_presentation_presenter2", "content":["presenter","presentation","presenter-2"] },
           { "icon":"three_streams_icon.svg", "id":"presenter_presentation_presenter3", "content":["presenter","presentation","presenter-3"] }
@@ -159,7 +160,7 @@
 
       "//****  User Tracking Saver Plugins": "",
       "es.upv.paella.usertracking.elasticsearchSaverPlugin": { "enabled": false, "url": "http://my.elastic.server"},
-      "es.upv.paella.usertracking.GoogleAnalyticsSaverPlugIn": { "enabled": false, "trackingID": "UA-XXXXXXXX-Y" },
+      "es.upv.paella.usertracking.GoogleAnalyticsSaverPlugIn": { "enabled": false, "trackingID": "UA-XXXXXX-Y" },
       "es.upv.paella.usertracking.piwikSaverPlugIn": { "enabled": false, "tracker":"http://localhost/piwik/", "siteId": "1" },
       "org.opencast.usertracking.MatomoSaverPlugIn": {
         "enabled": false,
@@ -178,7 +179,9 @@
     "repository": "../repository/"
   },
   "skin": {
+    "default": "manchester",
     "available": [
+      "manchester",
       "dark",
       "dark_small",
       "light",
