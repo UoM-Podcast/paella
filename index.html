@@ -18,7 +18,7 @@
 </head>
 
 <body id="body">
-  <div id="playerContainer" style="display:block;width:100%">
+  <div id="playerContainer" style="display:block;width:100%;background-color:#000000">
   </div>
   <script charset="utf-8">
     function getParamValue(paramName)
@@ -49,13 +49,13 @@
     // console.log(videoResourceMimetype);
 
     var currentUrl = (new URL(document.referrer)).hostname;
-    console.log(currentUrl);
+    // console.log(currentUrl);
 
     var currentPort = (new URL(document.referrer)).port;
-    console.log(currentPort);
+    // console.log(currentPort);
 
     var currentProtocol = (new URL(document.referrer)).protocol;
-    console.log(currentProtocol);
+    // console.log(currentProtocol);
 
     // Build the data.json to pass to paella
     var dataJSON = {
@@ -92,7 +92,7 @@
         }
       ]
     };
-    console.log(dataJSON.streams[0].sources.mp4[0].src);
+    // console.log(dataJSON.streams[0].sources.mp4[0].src);
     paella.load('playerContainer', { data:dataJSON });
   </script>
 </body>
