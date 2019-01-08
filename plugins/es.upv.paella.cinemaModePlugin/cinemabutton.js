@@ -2,15 +2,13 @@ paella.addPlugin(function() {
 	return class CinemaModePlugin extends paella.ButtonPlugin {
 		constructor() {
 			super();
-			this.playIconClass = 'icon-airplay';
-			this.pauseIconClass = 'icon-airplay';
-			this.playSubclass = 'playButton';
-			this.pauseSubclass = 'pauseButton';
+			this.cinemaIconClass = 'icon-display';
+			this.cinemaSubclass = 'cinemaButton';
 		}
 
 		getAlignment() { return 'right'; }
-		getSubclass() { return this.playSubclass; }
-		getIconClass() { return this.playIconClass; }
+		getSubclass() { return this.cinemaSubclass; }
+		getIconClass() { return this.cinemaIconClass; }
 		getName() { return "es.upv.paella.cinemaModePlugin"; }
 		getDefaultToolTip() { return base.dictionary.translate("Cinema Mode"); }
 		getIndex() { return 110; }
