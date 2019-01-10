@@ -21,16 +21,14 @@
   <div id="playerContainer" style="display:block;width:100%;background-color:#000000">
   </div>
   <script charset="utf-8">
-    function getParamValue(paramName)
-    {
-        var url = window.location.search.substring(1); //get rid of "?" in querystring
-        var qArray = url.split('&'); //get key-value pairs
-        for (var i = 0; i < qArray.length; i++)
-        {
-            var pArr = qArray[i].split('='); //split key and value
-            if (pArr[0] == paramName)
-                return pArr[1]; //return value
-        }
+    function getParamValue(paramName) {
+      var url = window.location.search.substring(1); //get rid of "?" in querystring
+      var qArray = url.split('&'); //get key-value pairs
+      for (var i = 0; i < qArray.length; i++) {
+        var pArr = qArray[i].split('='); //split key and value
+        if (pArr[0] == paramName)
+          return pArr[1]; //return value
+      }
     };
     // Get uri passed parameters to use with paella
     var videoResourceId = getParamValue('id');
@@ -56,44 +54,65 @@
 
     var currentProtocol = (new URL(document.referrer)).protocol;
     // console.log(currentProtocol);
-
+    var dataJSON = {}
     // Build the data.json to pass to paella
-    var dataJSON = {
-      "metadata": {
-        "duration": 0,
-        "title": ""
-      },
-      "streams": [
-        {
+    if (videoResourceCaptions == "") {
+      var dataJSON = {
+        "metadata": {
+          "duration": 0,
+          "title": ""
+        },
+        "streams": [{
           "sources": {
-            "mp4": [
-              {
-                "src": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-files/" + videoResourceId,
-                "mimetype": videoResourceMimetype,
-                "res": {
-                  "w": videoResourceHeight,
-                  "h": videoResourceWidth
-                }
+            "mp4": [{
+              "src": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-files/" + videoResourceId,
+              "mimetype": videoResourceMimetype,
+              "res": {
+                "w": videoResourceHeight,
+                "h": videoResourceWidth
               }
-            ]
+            }]
           },
           "preview": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-previews/" + videoResourceId,
           "content": "presenter"
-        }
-      ],
-      "frameList": [
-      ],
-      "captions": [
-        {
+        }],
+        "frameList": [],
+        "captions": []
+      };
+    } else {
+
+      var dataJSON = {
+        "metadata": {
+          "duration": 0,
+          "title": ""
+        },
+        "streams": [{
+          "sources": {
+            "mp4": [{
+              "src": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-files/" + videoResourceId,
+              "mimetype": videoResourceMimetype,
+              "res": {
+                "w": videoResourceHeight,
+                "h": videoResourceWidth
+              }
+            }]
+          },
+          "preview": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-previews/" + videoResourceId,
+          "content": "presenter"
+        }],
+        "frameList": [],
+        "captions": [{
           "lang": "en",
           "text": "English",
           "format": "vtt",
           "url": videoResourceCaptions
-        }
-      ]
-    };
+        }]
+      };
+    }
     // console.log(dataJSON.streams[0].sources.mp4[0].src);
-    paella.load('playerContainer', { data:dataJSON });
+    paella.load('playerContainer', {
+      data: dataJSON
+    });
   </script>
 </body>
 
