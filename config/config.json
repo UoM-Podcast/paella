@@ -74,7 +74,7 @@
       "es.upv.paella.fullScreenButtonPlugin": {"enabled":true, "reloadOnFullscreen":{ "enabled":true, "keepUserSelection":true }},
       "es.upv.paella.helpPlugin": {"enabled":false, "langs":["en","es"]},
       "es.upv.paella.multipleQualitiesPlugin": {"enabled":false, "showWidthRes":true},
-      "es.upv.paella.playbackRatePlugin": {"enabled":true, "availableRates": [0.75, 1, 1.25, 1.5]},
+      "es.upv.paella.playbackRatePlugin": {"enabled":true, "availableRates": [0.75, 1, 1.25, 1.5, 2]},
       "es.upv.paella.playPauseButtonPlugin": {"enabled":true},
       "es.upv.paella.cinemaModePlugin": {"enabled":true},
       "es.upv.paella.searchPlugin": {"enabled":false, "sortType":"time", "colorSearch":false},
