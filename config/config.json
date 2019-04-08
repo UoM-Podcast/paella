@@ -21,7 +21,20 @@
       { "factory":"WebmVideoFactory", "enabled":true },
       { "factory":"Html5VideoFactory", "enabled":true },
       { "factory":"MpegDashVideoFactory", "enabled":true },
-      { "factory":"HLSVideoFactory", "enabled":true },
+      {
+        "factory":"HLSVideoFactory",
+        "enabled":true,
+        "config": {
+          "*** You can add more hls.js settings here": "",
+          "https://github.com/video-dev/hls.js/blob/master/docs/API.md": "",
+          "maxBufferLength": 30,
+				  "maxMaxBufferLength": 600,
+				  "maxBufferSize": 60000000,
+				  "maxBufferHole": 0.5,
+				  "lowBufferWatchdogPeriod": 0.5,
+          "highBufferWatchdogPeriod": 3
+        }
+      },
       { "factory":"RTMPVideoFactory", "enabled":true },
       { "factory":"ImageVideoFactory", "enabled":true },
       { "factory":"YoutubeVideoFactory", "enabled":true },
@@ -93,7 +106,7 @@
       "//***** Video Overlay Button Plugins": "",
       "es.upv.paella.liveStreamingIndicatorPlugin":  { "enabled": true },
       "es.upv.paella.showEditorPlugin":{"enabled":true,"alwaysVisible":true},
-      "es.upv.paella.arrowSlidesNavigatorPlugin": {"enabled": true, "showArrowsIn": "slave"},
+      "es.upv.paella.arrowSlidesNavigatorPlugin": {"enabled": true, "content":["presentation","presenter"] },
       "es.upv.paella.videoDataPlugin": {
         "enabled": false,
         "excludeLocations":[
@@ -128,14 +141,14 @@
 
       "//**** Video profile plugins": "",
       "es.upv.paella.singleStreamProfilePlugin": {
-          "enabled": false,
+          "enabled": true,
           "videoSets": [
             { "icon":"professor_icon.svg", "id":"presenter", "content":["presenter"]},
             { "icon":"slide_icon.svg", "id":"presentation", "content":["presentation"]}
           ]
 
       },
-      "es.upv.paella.dualStreamProfilePlugin": { "enabled":false,
+      "es.upv.paella.dualStreamProfilePlugin": { "enabled":true,
         "videoSets": [
           { "icon":"slide_professor_icon.svg", "id":"presenter_presentation", "content":["presenter","presentation"] },
           { "icon":"slide_professor_icon.svg", "id":"presenter2_presentation", "content":["presenter-2","presentation"] },
@@ -143,7 +156,7 @@
         ]
       },
       "es.upv.paella.tripleStreamProfilePlugin": {
-        "enabled": false,
+        "enabled": true,
         "videoSets": [
           { "icon":"three_streams_icon.svg", "id":"presenter_presentation_presenter2", "content":["presenter","presentation","presenter-2"] },
           { "icon":"three_streams_icon.svg", "id":"presenter_presentation_presenter3", "content":["presenter","presentation","presenter-3"] }
@@ -160,7 +173,7 @@
 
       "//****  User Tracking Saver Plugins": "",
       "es.upv.paella.usertracking.elasticsearchSaverPlugin": { "enabled": false, "url": "http://my.elastic.server"},
-      "es.upv.paella.usertracking.GoogleAnalyticsSaverPlugIn": { "enabled": false, "trackingID": "UA-XXXXXX-Y" },
+      "es.upv.paella.usertracking.GoogleAnalyticsSaverPlugin": { "enabled": false, "trackingID": "UA-XXXXXXXX-Y" },
       "es.upv.paella.usertracking.piwikSaverPlugIn": { "enabled": false, "tracker":"http://localhost/piwik/", "siteId": "1" },
       "org.opencast.usertracking.MatomoSaverPlugIn": {
         "enabled": false,

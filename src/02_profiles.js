@@ -1,6 +1,5 @@
 (function() {
     let g_profiles = [];
-    let g_monostreamProfile = null;
 
 	paella.addProfile = function(cb) {
 		cb().then((profileData) => {
@@ -9,20 +8,14 @@
                 if (typeof(profileData.onApply)!="function") {
                     profileData.onApply = function() { }
                 }
+                if (typeof(profileData.onDeactivte)!="function") {
+                    profileData.onDeactivate = function() {}
+                }
 				paella.events.trigger(paella.events.profileListChanged, { profileData:profileData });
 			}
 		});
     }
     
-    paella.setMonostreamProfile = function(cb) {
-        cb().then((profileData) => {
-            if (typeof(profileData.onApply)!="function") {
-                profileData.onApply = function() {  }
-            }
-            g_monostreamProfile = profileData;
-        })
-    }
-
     // Utility functions
     function hideBackground() {
         let bkgNode = this.container.getNode("videoContainerBackground");
@@ -114,7 +107,7 @@
                     backgroundSize: '100% 100%',
                     display: 'block'
                 };
-                let logoNode = this.container.addNode(new paella.DomNode('button',btn.id,style));
+                let logoNode = this.container.addNode(new paella.DomNode('div',btn.id,style));
                 logoNode.domElement.className = "paella-profile-button";
                 logoNode.domElement.data = {
                     action: btn.onClick,
@@ -151,15 +144,18 @@
 
     function applyProfileWithJson(profileData,animate) {
         if (animate==undefined) animate = true;
+        if (!profileData) return;
         let getProfile = (content) => {
             let result = null;
-            profileData && profileData.videos.some((videoProfile) => {
-                if (videoProfile.content==content) {
-                    result = videoProfile;
-                }
-                return result!=null;
-            });
-            return result;
+            
+                profileData && profileData.videos.some((videoProfile) => {
+                    if (videoProfile.content==content) {
+                        result = videoProfile;
+                    }
+                    return result!=null;
+                });
+                return result;
+            
         };
 
         let applyVideoRect = (profile,videoData,videoWrapper,player) => {
@@ -197,6 +193,7 @@
         profileData && showBackground.apply(this,[profileData.background]);
         hideButtons.apply(this);
         profileData && showButtons.apply(this,[profileData.buttons, profileData]);
+        
         this.streamProvider.videoStreams.forEach((streamData,index) => {
             let profile = getProfile(streamData.content);
             let player = this.streamProvider.videoPlayers[index];
@@ -253,35 +250,49 @@
             return result;
         }
 
-        loadMonostreamProfile() {
-            return g_monostreamProfile;
-        }
-
         get currentProfile() { return this.getProfile(this._currentProfileName); }
 
         get currentProfileName() { return this._currentProfileName; }
 
         setProfile(profileName,animate) {
+            if (!profileName) {
+                return false;
+            }
+            
             animate = base.userAgent.browser.Explorer ? false:animate;
+            if (this.currentProfile) {
+                this.currentProfile.onDeactivate();
+            }
+
             if (!paella.player.videoContainer.ready) {
                 return false;	// Nothing to do, the video is not loaded
             }
-            else if (paella.player.videoContainer.streamProvider.videoStreams.length==1) {
-                let profileData = this.loadMonostreamProfile();  
-                this._currentProfileName = profileName;
-                applyProfileWithJson.apply(paella.player.videoContainer,[profileData,animate]);
-                return true;
-            }
             else {
                 let profileData = this.loadProfile(profileName) || (g_profiles.length>0 && g_profiles[0]);
-                this._currentProfileName = profileName;
-                applyProfileWithJson.apply(paella.player.videoContainer,[profileData,animate]);
-                return true;
+                if (!profileData && g_profiles.length==0) {
+                    // Try to load the profile again later, maybe the profiles are not loaded yet
+                    setTimeout(() => {
+                        this.setProfile(profileName,animate);
+                    },100);
+                    return false;
+                }
+                else {
+                    this._currentProfileName = profileName;
+                    applyProfileWithJson.apply(paella.player.videoContainer,[profileData,animate]);
+                    return true;
+                }
             }
         }
 
         getProfile(profileName) {
-
+            let result = null;
+            this.profileList.some((p) => {
+                if (p.id==profileName) {
+                    result = p;
+                    return true;
+                }
+            })
+            return result;
         }
 
         placeVideos() {

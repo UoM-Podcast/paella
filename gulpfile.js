@@ -3,11 +3,10 @@ const	gulp = require('gulp'),
 		concat = require('gulp-concat'),
 		connect = require('gulp-connect'),
 		replace = require('gulp-replace'),
-		less = require('gulp-less'),
-		traceur = require('gulp-traceur'),
+		less = require('gulp-less'),		
+		babel = require('gulp-babel'),
 		merge = require('gulp-merge-json'),
-		fs = require('fs'),
-		minify = require('gulp-minify'),
+		fs = require('fs'),		
 		uglify = require('gulp-uglify-es').default,
 		path = require('path'),
 
@@ -85,7 +84,7 @@ gulp.task("compileES5", function() {
 	files = getFiles("plugins/","js",files);
 	return gulp.src(files)
 		.pipe(concat("paella_player.js"))
-		.pipe(traceur())
+		.pipe(babel())
 		.pipe(replace(/@version@/,getVersion()))
 		.pipe(uglify())
 		.pipe(gulp.dest(`${config.outDir}player/javascript/`));
@@ -105,7 +104,7 @@ gulp.task("compileDebugES5", function() {
 	let files = getFiles("src/","js");
 	files = getFiles("plugins/","js",files);
 	return gulp.src(files)
-		.pipe(traceur())
+		.pipe(babel())
 		.pipe(concat("paella_player.js"))
 		.pipe(replace(/\@version\@/,getVersion()))
 		.pipe(gulp.dest(`${config.outDir}player/javascript/`));
@@ -120,15 +119,15 @@ gulp.task("compileDebugES2015", function() {
 		.pipe(gulp.dest(`${config.outDir}player/javascript/`));
 });
 
-gulp.task("compile",["compileES5","compileES2015"]);
-gulp.task("compileDebug",["compileDebugES5","compileDebugES2015"]);
+gulp.task("compile", gulp.series("compileES5","compileES2015"));
+gulp.task("compileDebug", gulp.series("compileDebugES5","compileDebugES2015"));
 
 gulp.task("styles", function() {
 	let p = [];
 	function genSkin(skinPath) {
 		var stat = fs.statSync(skinPath);
 		if (stat.isDirectory()) {
-			
+
 		}
 		fs.readdirSync(skinPath)
 			.forEach(function(pathItem) {
@@ -174,9 +173,8 @@ gulp.task("copy", function() {
 
 		gulp.src(['*.html'])
 			.pipe(gulp.dest(`${config.outDir}player/`)),
-
-		gulp.src('node_modules/traceur/bin/traceur-runtime.js')
-			.pipe(minify({ ext: { min: '.min.js' }}))
+	
+		gulp.src('node_modules/@babel/polyfill/dist/polyfill.min.js')
 			.pipe(gulp.dest(`${config.outDir}player/javascript`))
 	];
 
@@ -200,8 +198,8 @@ gulp.task("copy", function() {
 
 
 
- 
-gulp.task("dictionary", function(cb) {	
+
+gulp.task("dictionary", function(cb) {
 	let p = [];
 	let langs = [];
 	glob.sync([
@@ -209,7 +207,7 @@ gulp.task("dictionary", function(cb) {
 	]).forEach((l) => {
 		let re = RegExp(".*_([a-z]+)(\-[a-zA-Z]+)?\.json");
 		let result = re.exec(l);
-		if (result && !langs.includes(result[1])) {	
+		if (result && !langs.includes(result[1])) {
 			langs.push(result[1]);
 		}
 	});
@@ -220,7 +218,7 @@ gulp.task("dictionary", function(cb) {
 			`plugins/**/localization/${lang}**.json`
 			])
 			.pipe(merge({fileName:`paella_${lang}.json`}))
-			.pipe(gulp.dest(`${config.outDir}player/localization`)));		
+			.pipe(gulp.dest(`${config.outDir}player/localization`)));
 	});
 
 	return Promise.all(p);
@@ -232,31 +230,31 @@ gulp.task("setupBower", function() {
 });
 
 
-gulp.task("build", ["compile","styles","dictionary","copy"]);
-gulp.task("buildDebug", ["compileDebug","styles","dictionary","copy"]);
-gulp.task("buildBower", ["setupBower","build"]);
+gulp.task("build", gulp.series("compile","styles","dictionary","copy"));
+gulp.task("buildDebug", gulp.series("compileDebug","styles","dictionary","copy"));
+gulp.task("buildBower", gulp.series("setupBower","build"));
 
-gulp.task("watch", function() {
-	return gulp.watch([
+function watchFiles() {
+	gulp.watch([
 		'index.html',
 		'config/**',
 		'plugins/**',
 		'vendor/plugins/**',
 		'src/*.js'
-	],["build"]);
-});
+	],gulp.series("build"));
+}
 
-gulp.task("watchDebug", function() {
-	return gulp.watch([
-		'index.html',
-		'resources/**',
-		'repository_test/**',
-		'config/**',
-		'plugins/**',
-		'vendor/plugins/**',
-		'src/*.js'
-	],["buildDebug"]);
-});
+function watchFilesDebug() {
+	gulp.watch([
+		'./index.html',
+		'./resources/**',
+		'./repository_test/**',
+		'./config/**',
+		'./plugins/**',
+		'./vendor/plugins/**',
+		'./src/*.js'
+	],gulp.series('buildDebug'));
+}
 
 gulp.task("tools", function() {
 	let p = [
@@ -269,13 +267,13 @@ gulp.task("tools", function() {
 	return Promise.all(p);
 });
 
-gulp.task("default",["build"]);
-gulp.task("serve",["buildDebug","webserver","tools","watchDebug"]);
+gulp.task("default", gulp.series("build"));
+gulp.task("serve", gulp.parallel("buildDebug","webserver","tools",watchFilesDebug));
 
 // Compatibility
-gulp.task("server.release",["build","webserver","tools","watch"]);
-gulp.task("server.debug",["buildDebug","webserver","tools","watchDebug"]);
-gulp.task("build.debug",["buildDebug"]);
-gulp.task("build.release",["build"]);
+gulp.task("server.release", gulp.parallel("build","webserver","tools",watchFiles));
+gulp.task("server.debug", gulp.parallel("buildDebug","webserver","tools",watchFilesDebug));
+gulp.task("build.debug", gulp.series("buildDebug"));
+gulp.task("build.release", gulp.series("build"));
 
-gulp.task("build.bower",["buildBower"]);
+gulp.task("build.bower", gulp.series("buildBower"));
