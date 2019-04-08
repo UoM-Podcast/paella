@@ -59,11 +59,48 @@ div {
     user-select: none;
 }
 
-i.button-icon {
+.buttonPlugin {
+    cursor: pointer;
+    padding-right: 0px;
+    padding-left: 0px;
+    background-origin: border-box;
+    position: relative;
+    display: block;
+    float: left;
+    align-items: stretch;
+    background-color: transparent;
+    border: none;
+    box-sizing: border-box;
+
+    min-width: unit(@playbackBarButtonWidthPx - @playbackBarButtonPadding * 2,px);
+    height: unit(@playbackBarButtonHeightPx - @playbackBarButtonPadding * 2, px);
+
+    margin-left: @playbackBarButtonPadding;
+    margin-right: @playbackBarButtonPadding;
+    margin-top: @playbackBarButtonPadding;
+    color: @icon_text_color;
+    text-align: center;
+}
+
+button,div i.button-icon {
     color: @paella_icons_color;
     font-size: unit(@paellaIconsFontSizePx,px);
-    padding-left: unit(@paellaIconsPaddingLeftPx,px);
     line-height: unit(@paellaIconsLineHeightPx,px);
+    position: absolute;
+    top: 0px;
+    left: @playbackBarButtonPadding;
+}
+
+
+span.expandable-content {
+    color: @icon_text_color;
+    width: 80px;
+    display: block;
+    float: left;
+}
+
+.buttonPlugin.expandable-content {
+    background-color: transparent !important;
 }
 
 .buttonPlugin {
@@ -73,11 +110,12 @@ i.button-icon {
 .button-text {
     position: absolute;
     left: 0px;
-    right: 4px;
+    right: 2px;
     top: 0px;
     bottom: 0px;
     text-align: center;
     line-height: unit(@playbackBarButtonHeight * 0.75,px);
+    z-index: 1;
 }
 
 i.button-icon.icon-screen {
@@ -156,19 +194,6 @@ i.button-icon.icon-screen {
 
 .playbackBarFull.disabled {
     opacity: 0.2;
-}
-
-.buttonPlugin {
-    width: unit(@playbackBarButtonWidthPx - @playbackBarButtonPadding * 2,px);
-    height: unit(@playbackBarButtonHeightPx - @playbackBarButtonPadding * 2, px);
-    cursor: pointer;
-    /*background-image: @paella_icons_image;
-    background-size: @paella_icons_bkg_size;
-    background-position: 0px 0px;*/
-    margin-left: @playbackBarButtonPadding;
-    margin-right: @playbackBarButtonPadding;
-    margin-top: @playbackBarButtonPadding;
-    color: @icon_text_color;
 }
 
 .buttonPlugin.left {
@@ -412,7 +437,7 @@ i.button-icon.icon-screen {
     position: fixed;
     background-color: @backgroundColor;
     z-index: 99;
-    min-width: 256px;
+    width: 256px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

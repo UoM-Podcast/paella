@@ -32,7 +32,7 @@ paella.addPlugin(function() {
         let wrapper = videoPlayer.parent;
         let wrapperDom = wrapper.domElement;
 
-        let zoomButton = document.createElement('button');
+        let zoomButton = document.createElement('div');
         wrapperDom.appendChild(zoomButton);
         zoomButton.className = "videoZoomButton btn zoomIn";
         zoomButton.innerHTML = '<i class="glyphicon glyphicon-zoom-in"></i>'
@@ -44,7 +44,7 @@ paella.addPlugin(function() {
             setTimeout(() => paella.player.videoContainer.enablePlayOnClick(),10);
         });
 
-        zoomButton = document.createElement('button');
+        zoomButton = document.createElement('div');
         wrapperDom.appendChild(zoomButton);
         zoomButton.className = "videoZoomButton btn zoomOut";
         zoomButton.innerHTML = '<i class="glyphicon glyphicon-zoom-out"></i>'
@@ -77,7 +77,7 @@ paella.addPlugin(function() {
                 let buttons = $('.videoZoomButton');
                 let thumbs = $('.videoZoom');
                 if (this._visible && this._available) {
-                    buttons.show();    
+                    buttons.show();
                     thumbs.show();
                 }
                 else {
@@ -113,7 +113,7 @@ paella.addPlugin(function() {
                     })
                 }
             });
-            
+
             let update = false;
             paella.events.bind(paella.events.play,(evt) => {
                 let updateThumbs = () => {
@@ -141,7 +141,7 @@ paella.addPlugin(function() {
                             $(thumb.thumbContainer).show();
                             let x = target.video.zoomOffset.x * 100 / target.video.zoom;
                             let y = target.video.zoomOffset.y * 100 / target.video.zoom;
-                            
+
                             let zoomRect = thumb.zoomRect;
                             $(zoomRect).css({
                                 left: x + '%',
@@ -186,7 +186,7 @@ paella.addPlugin(function() {
 });
 
 paella.addPlugin(function() {
-    
+
     return class VideoZoomToolbarPlugin extends paella.ButtonPlugin {
         getAlignment() { return 'right'; }
         getSubclass() { return "videoZoomToolbar"; }
@@ -207,9 +207,9 @@ paella.addPlugin(function() {
             onSuccess(paella.player.config.player.videoZoom.enabled &&
                         this.targetPlayer &&
                         this.targetPlayer.allowZoom());
-    
+
         }
-        
+
         buildContent(domElement) {
             paella.events.bind(paella.events.videoZoomChanged, (evt,target) => {
                 this.setText(Math.round(target.video.zoom) + "%");
