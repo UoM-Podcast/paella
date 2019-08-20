@@ -7,8 +7,7 @@ paella.addPlugin(function() {
 		getIconClass() { return 'icon-backward2'; }
 		formatMessage() { return 'Rewind 10 seconds'; }
 		getDefaultToolTip() { return base.dictionary.translate(this.formatMessage()); }
-		getMinWindowSize() { return 510; }
-
+	
 		checkEnabled(onSuccess) {
 			onSuccess(!paella.player.isLiveStream());
 		}
