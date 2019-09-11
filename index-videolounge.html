@@ -55,62 +55,38 @@
     // console.log(currentProtocol);
     var dataJSON = {}
     // Build the data.json to pass to paella
-    if (videoResourceCaptions == "") {
-      var dataJSON = {
-        "metadata": {
-          "duration": 0,
-          "title": "",
-          "preview": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-previews/" + videoResourceId
+    var dataJSON = {
+      "metadata": {
+        "duration": 0,
+        "title": "",
+        "preview": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-previews/" + videoResourceId
+      },
+      "streams": [{
+        "sources": {
+          "mp4": [{
+            "src": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-files/" + videoResourceId,
+            "mimetype": videoResourceMimetype,
+            "res": {
+              "w": videoResourceHeight,
+              "h": videoResourceWidth
+            }
+          }]
         },
-        "streams": [{
-          "sources": {
-            "mp4": [{
-              "src": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-files/" + videoResourceId,
-              "mimetype": videoResourceMimetype,
-              "res": {
-                "w": videoResourceHeight,
-                "h": videoResourceWidth
-              }
-            }]
-          },
-          "preview": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-previews/" + videoResourceId,
-          "content": "presenter"
-        }],
-        "frameList": [],
-        "captions": []
-      };
-    } else {
+        "preview": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-previews/" + videoResourceId,
+        "content": "presenter"
+      }],
+      "frameList": [],
+      "captions": []
+    };
+    if (videoResourceCaptions != "") {
+      dataJSON.captions = [{
+        "lang": "en",
+        "text": "English",
+        "format": "vtt",
+        "url": videoResourceCaptions
+      }];
+    };
 
-      var dataJSON = {
-        "metadata": {
-          "duration": 0,
-          "title": "",
-          "preview": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-previews/" + videoResourceId
-        },
-        "streams": [{
-          "sources": {
-            "mp4": [{
-              "src": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-files/" + videoResourceId,
-              "mimetype": videoResourceMimetype,
-              "res": {
-                "w": videoResourceHeight,
-                "h": videoResourceWidth
-              }
-            }]
-          },
-          "preview": currentProtocol + '//' + currentUrl + ":" + currentPort + "/weblounge-previews/" + videoResourceId,
-          "content": "presenter"
-        }],
-        "frameList": [],
-        "captions": [{
-          "lang": "en",
-          "text": "English",
-          "format": "vtt",
-          "url": videoResourceCaptions
-        }]
-      };
-    }
-    // console.log(dataJSON.streams[0].sources.mp4[0].src);
     paella.load('playerContainer', {
       data: dataJSON
     });
