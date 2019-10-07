@@ -95,7 +95,7 @@
       "es.upv.paella.themeChooserPlugin":  {"enabled":false, "minWindowSize": 600 },
       "es.upv.paella.viewModePlugin": { "enabled": true, "minWindowSize": 300 },
       "es.upv.paella.volumeRangePlugin":{"enabled":true, "showMasterVolume": true, "showSlaveVolume": false },
-      "es.upv.paella.pipModePlugin": { "enabled":true },
+      "es.upv.paella.pipModePlugin": { "enabled":true, "minWindowSize": 550},
       "es.upv.paella.ratePlugin": { "enabled":false, "minWindowSize": 500 },
       "es.upv.paella.videoZoomPlugin": { "enabled":false },
       "es.upv.paella.audioSelector": { "enabled":false, "minWindowSize": 400 },
