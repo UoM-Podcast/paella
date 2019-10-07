@@ -1,7 +1,7 @@
 
 paella.addPlugin(function() {
 	return class PlaybackRate extends paella.ButtonPlugin {
-		
+
 		getAlignment() { return 'left'; }
 		getSubclass() { return "showPlaybackRateButton"; }
 		getIconClass() { return 'icon-screen'; }
@@ -17,7 +17,7 @@ paella.addPlugin(function() {
 			this.defaultRate = null;
 			this._domElement = null;
 			this.available_rates =  null;
-			var enabled = (!base.userAgent.browser.IsMobileVersion && paella.player.videoContainer.masterVideo() instanceof paella.Html5Video);
+			var enabled = (paella.player.videoContainer.masterVideo() instanceof paella.Html5Video);
 			onSuccess(enabled);
 		}
 
