@@ -11,7 +11,7 @@ paella.addPlugin(function() {
 		getIconClass() { return this.cinemaIconClass; }
 		getName() { return "es.upv.paella.cinemaModePlugin"; }
 		getDefaultToolTip() { return base.dictionary.translate("Cinema Mode"); }
-		getIndex() { return 110; }
+		getIndex() { return 552; }
 
 		checkEnabled(onSuccess) {
 			onSuccess(true);
