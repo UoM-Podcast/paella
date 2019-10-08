@@ -1,3 +1,4 @@
+
 paella.addPlugin(function() {
     return class SingleStreamProfilePlugin extends paella.EventDrivenPlugin {
         getName() {
@@ -48,8 +49,8 @@ paella.addPlugin(function() {
                                             layer:1
                                         }
                                     ],
-                                    background:{content:"",zIndex:5,rect:{left:0,top:0,width:1280,height:720},visible:true,layer:0},
-                                    logos:[],
+                                    background:{content:"slide_professor_paella.jpg",zIndex:5,rect:{left:0,top:0,width:1280,height:720},visible:true,layer:0},
+                                    logos:[{content:"paella_logo.png",zIndex:5,rect:{top:10,left:10,width:49,height:42}}],
                                     buttons: [],
                                     onApply: function() {
                                     }
@@ -68,11 +69,11 @@ paella.addPlugin(function() {
 
 paella.addPlugin(function() {
 	return class DualStreamProfilePlugin extends paella.EventDrivenPlugin {
-
+		
 		getName() {
 			return "es.upv.paella.dualStreamProfilePlugin";
 		}
-
+		
 		checkEnabled(onSuccess) {
             let config = this.config;
             config.videoSets.forEach((videoSet,index) => {
@@ -119,8 +120,8 @@ paella.addPlugin(function() {
                                             layer:"1"
                                         }
                                     ],
-                                    background:{content:"",zIndex:5,rect:{left:0,top:0,width:1280,height:720},visible:true,layer:0},
-                                    logos:[],
+                                    background:{content:"slide_professor_paella.jpg",zIndex:5,rect:{left:0,top:0,width:1280,height:720},visible:true,layer:0},
+                                    logos:[{content:"paella_logo.png",zIndex:5,rect:{top:10,left:10,width:49,height:42}}],
                                     buttons: [
                                         {
                                             rect: { left: 682, top: 565, width: 45, height: 45 },
@@ -252,11 +253,11 @@ paella.addPlugin(function() {
 
 paella.addPlugin(function() {
 	return class TripleStreamProfilePlugin extends paella.EventDrivenPlugin {
-
+		
 		getName() {
 			return "es.upv.paella.tripleStreamProfilePlugin";
 		}
-
+		
 		checkEnabled(onSuccess) {
             let config = this.config;
             config.videoSets.forEach((videoSet,index) => {
@@ -303,8 +304,8 @@ paella.addPlugin(function() {
                                             layer:1
                                         }
                                     ],
-                                    background: {content:"",zIndex:5,rect: { left:0,top:0,width:1280,height:720},visible: true,layer:0},
-                                    logos: [],
+                                    background: {content:"slide_professor_paella.jpg",zIndex:5,rect: { left:0,top:0,width:1280,height:720},visible: true,layer:0},
+                                    logos: [{content:"paella_logo.png",zIndex:5,rect: { top:10,left:10,width:49,height:42}}],
                                     buttons: [
                                         {
                                             rect: { left: 618, top: 495, width: 45, height: 45 },
@@ -374,8 +375,8 @@ paella.addProfile(() => {
                         }
                     ],
                     //blackBoardImages: {left:10,top:325,width:432,height:324},
-                    background: {content:"",zIndex:5,rect: { left:0,top:0,width:1280,height:720},visible: true,layer:0},
-                    logos: [],
+                    background: {content:"slide_professor_paella.jpg",zIndex:5,rect: { left:0,top:0,width:1280,height:720},visible: true,layer:0},
+                    logos: [{content:"paella_logo.png",zIndex:5,rect: { top:10,left:10,width:49,height:42}}],
                     buttons: [
                         {
                             rect: { left: 422, top: 295, width: 45, height: 45 },
@@ -435,9 +436,10 @@ paella.addProfile(() => {
                         }
                     ],
                     background:{content:"default_background_paella.jpg",zIndex:5,rect:{left:0,top:0,width:1280,height:720},visible:"true",layer:"0"},
-                    logos:[]
+                    logos:[{content:"paella_logo.png",zIndex:5,rect:{top:10,left:10,width:49,height:42}}]
                 })
             }
         })
     })
 });
+

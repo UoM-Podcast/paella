@@ -19,10 +19,10 @@
       { "factory":"ChromaVideoFactory", "enabled":true },
       { "factory":"WebmVideoFactory", "enabled":true },
       { "factory":"Html5VideoFactory", "enabled":true },
-      { "factory":"MpegDashVideoFactory", "enabled":true },
+      { "factory":"MpegDashVideoFactory", "enabled":false },
       {
         "factory":"HLSVideoFactory",
-        "enabled":true,
+        "enabled":false,
         "config": {
           "*** You can add more hls.js settings here": "",
           "https://github.com/video-dev/hls.js/blob/master/docs/API.md": "",
@@ -36,19 +36,16 @@
         "iOSMaxStreams": 2,
         "androidMaxStreams": 2
       },
-      { "factory":"RTMPVideoFactory", "enabled":true },
-      { "factory":"ImageVideoFactory", "enabled":true },
-      { "factory":"YoutubeVideoFactory", "enabled":true },
-      { "factory":"Video360ThetaFactory", "enabled":true },
-      { "factory":"Video360Factory", "enabled":true }
+      { "factory":"RTMPVideoFactory", "enabled":false },
+      { "factory":"ImageVideoFactory", "enabled":false },
+      { "factory":"YoutubeVideoFactory", "enabled":false },
+      { "factory":"Video360ThetaFactory", "enabled":false },
+      { "factory":"Video360Factory", "enabled":false }
     ],
     "audioMethods":[
-      { "factory":"MultiformatAudioFactory", "enabled":true }
+      { "factory":"MultiformatAudioFactory", "enabled":false }
     ],
-        "rtmpSettings":{
-            "bufferTime":5,
-      "requiresSubscription": false
-        },
+    "defaultAudioTag": "",
     "slidesMarks":{
       "enabled":true,
       "color":"gray"
@@ -56,7 +53,7 @@
   },
   "defaultProfile":"manchester_presentation",
   "data":{
-    "enabled":true,
+    "enabled":false,
     "dataDelegates":{
       "trimming":"CookieDataDelegate",
       "metadata":"VideoManifestMetadataDataDelegate",
@@ -128,12 +125,12 @@
       "es.upv.paella.test.tabBarExamplePlugin": {"enabled": false},
 
       "//**** Event Driven Plugins": "",
-      "es.upv.paella.blackBoardPlugin": {"enabled": true},
-      "es.upv.paella.breaksPlayerPlugin": {"enabled": true},
+      "es.upv.paella.blackBoardPlugin": {"enabled": false},
+      "es.upv.paella.breaksPlayerPlugin": {"enabled": false},
       "es.upv.paella.overlayCaptionsPlugin": {"enabled": true},
       "es.upv.paella.playButtonOnScreenPlugin": {"enabled":true},
       "es.upv.paella.translecture.captionsPlugin": {"enabled":false},
-      "es.upv.paella.trimmingPlayerPlugin": {"enabled":true},
+      "es.upv.paella.trimmingPlayerPlugin": {"enabled":false},
       "es.upv.paella.windowTitlePlugin": {"enabled": false},
       "es.upv.paella.track4kPlugin": { "enabled":false },
       "es.upv.paella.relatedVideosPlugin": { "enabled":false },
