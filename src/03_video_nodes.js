@@ -116,6 +116,7 @@ class VideoRect extends paella.DomNode {
 		let eventCapture = document.createElement('div');
 		setTimeout(() => this.domElement.parentElement.appendChild(eventCapture), 10);
 
+		eventCapture.id = id + "EventCapture";
 		eventCapture.style.position = "absolute";
 		eventCapture.style.top = "0px";
 		eventCapture.style.left = "0px";
@@ -478,8 +479,14 @@ class VideoRect extends paella.DomNode {
 		}
 	}
 
+	get canvasData() {
+		let canvasType = this._stream && Array.isArray(this._stream.canvas) && this._stream.canvas[0];
+		let canvasData = canvasType && paella.getVideoCanvasData(this._stream.canvas[0]) || { mouseEventsSupport: false, webglSupport: false };
+		return canvasData;
+	}
+
 	allowZoom() {
-		return true;
+		return !this.canvasData.mouseEventsSupport;
 	}
 
 	setZoom(zoom,left,top,tween=0) {
@@ -547,6 +554,10 @@ class VideoElementBase extends paella.VideoRect {
 		this._videoQualityStrategy = null;
 		
 		if (this._stream.preview) this.setPosterFrame(this._stream.preview);
+
+		if (this.canvasData.mouseEventsSupport) {
+			this.disableEventCapture();
+		}
 	}
 
 	get ready() { return this._ready; }
@@ -579,6 +590,11 @@ class VideoElementBase extends paella.VideoRect {
 
 	supportAutoplay() {
 		return true;
+	}
+
+	// Video canvas functions
+	videoCanvas() {
+		return Promise.reject(new Error("VideoElementBase::videoCanvas(): Not implemented in child class."));
 	}
 
 	// Playback functions
@@ -753,6 +769,10 @@ class Html5Video extends paella.VideoElementBase {
 		this.video.setAttribute("playsinline","");
 		this.video.setAttribute("tabindex","-1");
 
+		this._configureVideoEvents(this.video);
+	}
+
+	_configureVideoEvents(videoElement) {
 		function onProgress(event) {
 			if (!this._ready && this.video.readyState==4) {
 				this._ready = true;
@@ -796,7 +816,15 @@ class Html5Video extends paella.VideoElementBase {
 		}
 	}
 	
-	get video() { return this.domElement; }
+	get video() {
+		if (this.domElementType=='video') {
+			return this.domElement;
+		}
+		else {
+			this._video = this._video || document.createElement('video');
+			return this._video;
+		}
+	}
 
 	get ready() {
 		// Fix Firefox specific issue when video reaches the end
@@ -891,37 +919,79 @@ class Html5Video extends paella.VideoElementBase {
 		}
 	}
 
+	videoCanvas() {
+		let canvasType = this._stream.canvas || ["video"];
+		return paella.getVideoCanvas(canvasType);
+	}
+
+	webGlDidLoad() {
+		return Promise.resolve();
+	}
+
 	load() {
-		var This = this;
-		var sources = this._stream.sources[this._streamName];
-		if (this._currentQuality===null && this._videoQualityStrategy) {
-			this._currentQuality = this._videoQualityStrategy.getQualityIndex(sources);
-		}
-
-		var stream = this._currentQuality<sources.length ? sources[this._currentQuality]:null;
-		this.video.innerText = "";
-		if (stream) {
-			var sourceElem = this.video.querySelector('source');
-			if (!sourceElem) {
-				sourceElem = document.createElement('source');
-				this.video.appendChild(sourceElem);
+		return new Promise((resolve,reject) => {
+			var sources = this._stream.sources[this._streamName];
+			if (this._currentQuality===null && this._videoQualityStrategy) {
+				this._currentQuality = this._videoQualityStrategy.getQualityIndex(sources);
 			}
-			if (this._posterFrame) {
-				this.video.setAttribute("poster",this._posterFrame);
-			}
+	
+			var stream = this._currentQuality<sources.length ? sources[this._currentQuality]:null;
+			this.video.innerText = "";
+			this.videoCanvas()
+				.then((CanvasClass) => {
+					let canvasInstance = new CanvasClass(stream);
+					this._zoomAvailable = canvasInstance.allowZoom();
 
-			sourceElem.src = stream.src;
-			sourceElem.type = stream.type;
-			this.video.load();
-			this.video.playbackRate = this._playbackRate;
+					if (window.$paella_bg && bg.app && canvasInstance instanceof bg.app.WindowController) {
+						// WebGL canvas
+						this.domElementType = 'canvas';
+						if (stream) {
 
-			return this._deferredAction(function() {
-				return stream;
-			});
-		}
-		else {
-			return paella_DeferredRejected(new Error("Could not load video: invalid quality stream index"));
-		}
+							// WebGL engine load callback
+							return new Promise((webglResolve,webglReject) => {
+								this.webGlDidLoad()
+									.then(() => {
+										this.canvasController = null;
+										let mainLoop = bg.app.MainLoop.singleton;
+
+										mainLoop.updateMode = bg.app.FrameUpdate.AUTO;
+										mainLoop.canvas = this.domElement;
+										mainLoop.run(canvasInstance);
+										return this.loadVideoStream(canvasInstance,stream);
+									})
+
+									.then((canvas) => {
+										webglResolve(canvas);
+									})
+									.catch((err) => webglReject(err));
+							});
+						}
+						else {
+							Promise.reject(new Error("Invalid stream data."));
+						}
+					}
+					else {
+						return this.loadVideoStream(canvasInstance,stream);
+					}
+				})
+	
+				.then((canvas) => {
+					if (canvas && paella.WebGLCanvas && canvas instanceof paella.WebGLCanvas) {
+						this._video = canvas.video;
+						this._video.pause();
+						this._configureVideoEvents(this.video);
+					}
+					resolve(stream);
+				})
+	
+				.catch((err) => {
+					reject(err);
+				});
+		});
+	}
+
+	loadVideoStream(canvasInstance,stream) {
+		return canvasInstance.loadVideo(this,stream);
 	}
 
 	disable(isMainAudioPlayer) {
