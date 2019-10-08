@@ -16,7 +16,7 @@
 			{"aspectRatio":"5/4","left":"190","top":"0","width":"900","height":"720"},
 			{"aspectRatio":"4/3","left":"160","top":"0","width":"960","height":"720"}],"visible":"true","layer":"1"},
 		"background":{},
-		"logos":[{"content":"paella_logo.png","zIndex":5,"rect":{"top":"10","left":"10","width":"49","height":"42"}}],
+		"logos":[],
 		"isMonostream":true
 	},
 	"s_p_blackboard2":{
