@@ -1,6 +1,6 @@
 paella.addPlugin(function() {
     return class PIPModePlugin extends paella.ButtonPlugin {
-        getIndex() { return 551; }
+        getIndex() { return 553; }
         getAlignment() { return 'right'; }
         getSubclass() { return "PIPModeButton"; }
         getIconClass() { return 'icon-pip'; }
