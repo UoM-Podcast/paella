@@ -53,11 +53,9 @@
   },
   "defaultProfile":"manchester_presentation",
   "data":{
-    "enabled":false,
+    "enabled":true,
     "dataDelegates":{
-      "trimming":"CookieDataDelegate",
-      "metadata":"VideoManifestMetadataDataDelegate",
-      "cameraTrack":"TrackCameraDataDelegate"
+      "footprints":"UoMFootPrintsDataDelegate"
     }
   },
   "folders": {
@@ -79,7 +77,7 @@
       "edu.harvard.dce.paella.flexSkipForwardPlugin": {"enabled":true, "direction": "Forward", "seconds": 30, "minWindowSize": 350 },
       "es.upv.paella.captionsPlugin": {"enabled":true, "searchOnCaptions":true, "minWindowSize": 350 },
       "es.upv.paella.extendedTabAdapterPlugin": {"enabled":false, "minWindowSize": 400},
-      "es.upv.paella.footprintsPlugin": {"enabled":false},
+      "es.upv.paella.footprintsPlugin": {"enabled":true},
       "es.upv.paella.frameControlPlugin":  {"enabled": true, "showFullPreview": "auto", "showCaptions":true, "minWindowSize": 450 },
       "es.upv.paella.fullScreenButtonPlugin": {"enabled":true, "reloadOnFullscreen":{ "enabled":true, "keepUserSelection":true }},
       "es.upv.paella.helpPlugin": {"enabled":false, "langs":["en","es"], "minWindowSize": 650 },

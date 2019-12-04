@@ -1,4 +1,4 @@
-/*  
+/*
 	Paella HTML 5 Multistream Player
 	Copyright (C) 2017  Universitat Politècnica de València Licensed under the
 	Educational Community License, Version 2.0 (the "License"); you may
@@ -18,7 +18,7 @@
 // Paella Mouse Manager
 ///////////////////////////////////////////////////////
 (() => {
-	class MouseManager {	
+	class MouseManager {
 		get targetObject() { return this._targetObject; }
 		set targetObject(t) { this._targetObject = t; }
 
@@ -27,7 +27,7 @@
 			paella.events.bind('mousemove',(event) => this.move(event));
 			paella.events.bind('mouseover',(event) =>  this.over(event));
 		}
-	
+
 		down(targetObject,event) {
 			this.targetObject = targetObject;
 			if (this.targetObject && this.targetObject.down) {
@@ -36,7 +36,7 @@
 			}
 			return false;
 		}
-	
+
 		up(event) {
 			if (this.targetObject && this.targetObject.up) {
 				this.targetObject.up(event,event.pageX,event.pageY);
@@ -45,7 +45,7 @@
 			this.targetObject = null;
 			return false;
 		}
-	
+
 		out(event) {
 			if (this.targetObject && this.targetObject.out) {
 				this.targetObject.out(event,event.pageX,event.pageY);
@@ -53,7 +53,7 @@
 			}
 			return false;
 		}
-	
+
 		move(event) {
 			if (this.targetObject && this.targetObject.move) {
 				this.targetObject.move(event,event.pageX,event.pageY);
@@ -61,7 +61,7 @@
 			}
 			return false;
 		}
-	
+
 		over(event) {
 			if (this.targetObject && this.targetObject.over) {
 				this.targetObject.over(event,event.pageX,event.pageY);
@@ -87,30 +87,30 @@
 	document.head.appendChild(link);
 })();
 
-paella.utils = {	
+paella.utils = {
 	mouseManager: new paella.MouseManager(),
-	
+
 	folders: {
 		get: function(folder) {
 			if (paella.player && paella.player.config && paella.player.config.folders && paella.player.config.folders[folder]) {
-				return paella.player.config.folders[folder];	
+				return paella.player.config.folders[folder];
 			}
-			return undefined;			
+			return undefined;
 		},
-		
+
 		profiles: function() {
 			return paella.baseUrl + (paella.utils.folders.get("profiles") || "config/profiles");
 		},
-		
+
 		resources: function() {
 			return paella.baseUrl + (paella.utils.folders.get("resources") || "resources");
 		},
-		
+
 		skins: function() {
 			return paella.baseUrl + (paella.utils.folders.get("skins") || paella.utils.folders.get("resources") + "/style");
 		}
 	},
-	
+
 	styleSheet: {
 		removeById:function(id) {
 			var outStyleSheet = $(document.head).find('#' + id)[0];
@@ -118,7 +118,7 @@ paella.utils = {
 				document.head.removeChild(outStyleSheet);
 			}
 		},
-		
+
 		remove:function(fileName) {
 			var links = document.head.getElementsByTagName('link');
 			for (var i =0; i<links.length; ++i) {
@@ -128,7 +128,7 @@ paella.utils = {
 				}
 			}
 		},
-		
+
 		add:function(fileName,id) {
 			var link = document.createElement('link');
 			link.rel = 'stylesheet';
@@ -139,13 +139,13 @@ paella.utils = {
 			if (id) link.id = id;
 			document.head.appendChild(link);
 		},
-		
+
 		swap:function(outFile,inFile) {
 			this.remove(outFile);
 			this.add(inFile);
 		}
 	},
-	
+
 	skin: {
 		set:function(skinName) {
 			var skinId = 'paellaSkin';
@@ -153,7 +153,7 @@ paella.utils = {
 			paella.utils.styleSheet.add(paella.utils.folders.skins() + '/style_' + skinName + '.css');
 			base.cookies.set("skin",skinName);
 		},
-		
+
 		restore:function(defaultSkin) {
 			var storedSkin = base.cookies.get("skin");
 			if (storedSkin && storedSkin!="") {
@@ -181,7 +181,7 @@ paella.utils = {
 			}
 			return hours + minutes + seconds;
 		},
-	
+
 		secondsToTime:function(seconds) {
 			var hrs = ~~ (seconds / 3600);
 			if (hrs<10) hrs = '0' + hrs;
@@ -253,16 +253,16 @@ paella.utils = {
 
 	objectFromString: function(str) {
 	  var arr = str.split(".");
-	
+
 	  var fn = (window || this);
 	  for (var i = 0, len = arr.length; i < len; i++) {
 		fn = fn[arr[i]];
 	  }
-	
+
 	  if (typeof fn !== "function") {
 		throw new Error("constructor not found");
 	  }
-	
+
 	  return fn;
 	}
 };
@@ -299,7 +299,7 @@ paella.utils = {
 		get enabled() { return this._enabled; }
 
 		get dataDelegates() { return g_dataDelegates; }
-	
+
 		constructor(config) {
 			this._enabled = config.data.enabled;
 
@@ -330,12 +330,12 @@ paella.utils = {
 
 			for (var key in config.data.dataDelegates) {
 				try {
-					
+
 					var delegateName = config.data.dataDelegates[key];
 					var DelegateClass = paella.dataDelegates[delegateName];
 					var delegateInstance = new DelegateClass();
 					g_dataDelegates[key] = delegateInstance;
-				
+
 				}
 				catch (e) {
 					console.warn("Warning: delegate not found - " + delegateName);
@@ -348,22 +348,22 @@ paella.utils = {
 				this.dataDelegates["default"] = new paella.dataDelegates.DefaultDataDelegate();
 			}
 		}
-	
+
 		read(context,key,onSuccess) {
 			var del = this.getDelegate(context);
 			del.read(context,key,onSuccess);
 		}
-	
+
 		write(context,key,params,onSuccess) {
 			var del = this.getDelegate(context);
 			del.write(context,key,params,onSuccess);
 		}
-	
+
 		remove(context,key,onSuccess) {
 			var del = this.getDelegate(context);
 			del.remove(context,key,onSuccess);
 		}
-	
+
 		getDelegate(context) {
 			if (this.dataDelegates[context]) return this.dataDelegates[context];
 			else return this.dataDelegates["default"];
@@ -385,6 +385,68 @@ paella.utils = {
 
 })();
 
+paella.addDataDelegate(["footprints"], () => {
+paella.dataDelegates.UoMFootPrintsDataDelegate = class UoMFootPrintsDataDelegate extends paella.DataDelegate {
+  constructor(){
+    super();
+  }
+
+  read(context,params,onSuccess) {
+    var episodeId = params.id;
+
+		var query = {
+	    "query": {
+	        "match" : {
+	            "id" : {
+	                "query" : "00000000-71b5-9fb6-0000-016e2279b968"
+	            }
+	        }
+	    }
+};
+
+    paella.ajax.get({url: 'https://search-search-paellafootprints-4d62kxw2lej25agqomabhoaytm.eu-west-2.es.amazonaws.com/paellaplayer/usertracking/_search?size=1000', params:JSON.stringify(query), type:"GET"},
+      function(data, contentType, returnCode) {
+        if ((returnCode == 200) && (contentType == 'application/json')) {
+          var footPrintsData = data.footprints.footprint;
+          if (data.footprints.total == '1'){
+            footPrintsData = [footPrintsData];
+          }
+          if (onSuccess) { onSuccess(footPrintsData, true); }
+        }
+        else{
+          if (onSuccess) { onSuccess({}, false); }
+        }
+      },
+      function(data, contentType, returnCode) {
+        if (onSuccess) { onSuccess({}, false); }
+      }
+    );
+  }
+
+  write(context,params,value,onSuccess) {
+		console.log(value);
+    var episodeId = params.id;
+    paella.ajax.post({url: 'https://search-search-paellafootprints-4d62kxw2lej25agqomabhoaytm.eu-west-2.es.amazonaws.com/paellaplayer/usertracking/', params:JSON.stringify({
+      _method: 'POST',
+      id: episodeId,
+      type:'FOOTPRINT',
+      in:value.in,
+      out:value.out })
+    },
+    function(data, contentType, returnCode) {
+      var ret = false;
+      if (returnCode == 201) { ret = true; }
+      if (onSuccess) { onSuccess({}, ret); }
+    },
+    function(data, contentType, returnCode) {
+      if (onSuccess) { onSuccess({}, false); }
+    }
+    );
+  }
+}
+return paella.dataDelegates.UoMFootPrintsDataDelegate;
+})
+
 paella.addDataDelegate(["default","trimming"], () => {
 	paella.dataDelegates.DefaultDataDelegate = class CookieDataDelegate extends paella.DataDelegate {
 		serializeKey(context,params) {
@@ -393,7 +455,7 @@ paella.addDataDelegate(["default","trimming"], () => {
 			}
 			return context + '|' + params;
 		}
-	
+
 		read(context,params,onSuccess) {
 			var key = this.serializeKey(context,params);
 			var value = base.cookies.get(key);
@@ -406,11 +468,12 @@ paella.addDataDelegate(["default","trimming"], () => {
 				onSuccess(value,true);
 			}
 		}
-	
+
 		write(context,params,value,onSuccess) {
 			var key = this.serializeKey(context,params);
 			if (typeof(value)=='object') {
 				value = JSON.stringify(value);
+				console.log(value);
 			}
 			value = escape(value);
 			base.cookies.set(key,value);
@@ -418,7 +481,7 @@ paella.addDataDelegate(["default","trimming"], () => {
 				onSuccess({},true);
 			}
 		}
-	
+
 		remove(context,params,onSuccess) {
 			var key = this.serializeKey(context,params);
 			if (typeof(value)=='object') {
@@ -441,7 +504,7 @@ paella.data = null;
 (() => {
 	// Include scripts in header
 	let g_requiredScripts = {};
-	
+
 	paella.require = function(path) {
 		if (!g_requiredScripts[path]) {
 			g_requiredScripts[path] = new Promise((resolve,reject) => {
@@ -461,17 +524,17 @@ paella.data = null;
 	};
 
 	class MessageBox {
-		get modalContainerClassName() { return 'modalMessageContainer'; } 
+		get modalContainerClassName() { return 'modalMessageContainer'; }
 		get frameClassName() { return 'frameContainer'; }
 		get messageClassName() { return 'messageContainer'; }
 		get errorClassName() { return 'errorContainer'; }
-		
+
 		get currentMessageBox() { return this._currentMessageBox; }
-		set currentMessageBox(m) { this._currentMessageBox = m; } 
+		set currentMessageBox(m) { this._currentMessageBox = m; }
 		get messageContainer() { return this._messageContainer; }
 		get onClose() { return this._onClose; }
 		set onClose(c) { this._onClose = c; }
-	
+
 		constructor() {
 			this._messageContainer = null;
 			$(window).resize((event) => this.adjustTop());
@@ -484,18 +547,18 @@ paella.data = null;
 				closeButton = params.closeButton;
 				onClose = params.onClose;
 			}
-	
+
 			this.doShowFrame(src,closeButton,onClose);
 		}
-	
+
 		doShowFrame(src,closeButton,onClose) {
 			this.onClose = onClose;
 			$('#playerContainer').addClass("modalVisible");
-	
+
 			if (this.currentMessageBox) {
 				this.close();
 			}
-	
+
 			var modalContainer = document.createElement('div');
 			modalContainer.className = this.modalContainerClassName;
 			modalContainer.style.position = 'fixed';
@@ -508,29 +571,29 @@ paella.data = null;
 			var messageContainer = document.createElement('div');
 			messageContainer.className = this.frameClassName;
 			modalContainer.appendChild(messageContainer);
-	
+
 			var iframeContainer = document.createElement('iframe');
 			iframeContainer.src = src;
 			iframeContainer.setAttribute("frameborder", "0");
 			iframeContainer.style.width = "100%";
 			iframeContainer.style.height = "100%";
 			messageContainer.appendChild(iframeContainer);
-	
+
 			if (paella.player && paella.player.isFullScreen()) {
 				paella.player.mainContainer.appendChild(modalContainer);
 			}else{
 				$('body')[0].appendChild(modalContainer);
 			}
-	
+
 			this.currentMessageBox = modalContainer;
 			this._messageContainer = messageContainer;
 			this.adjustTop();
-	
+
 			if (closeButton) {
 				this.createCloseButton();
 			}
 		}
-	
+
 		showElement(domElement,params) {
 			var closeButton = true;
 			var onClose = null;
@@ -540,10 +603,10 @@ paella.data = null;
 				closeButton = params.closeButton;
 				onClose = params.onClose;
 			}
-	
+
 			this.doShowElement(domElement,closeButton,className,onClose);
 		}
-	
+
 		showMessage(message,params) {
 			var closeButton = true;
 			var onClose = null;
@@ -553,19 +616,19 @@ paella.data = null;
 				closeButton = params.closeButton;
 				onClose = params.onClose;
 			}
-	
+
 			this.doShowMessage(message,closeButton,className,onClose);
 		}
-	
+
 		doShowElement(domElement,closeButton,className,onClose) {
 			this.onClose = onClose;
 			$('#playerContainer').addClass("modalVisible");
-	
+
 			if (this.currentMessageBox) {
 				this.close();
 			}
 			if (!className) className = this.messageClassName;
-	
+
 			var modalContainer = document.createElement('div');
 			modalContainer.className = this.modalContainerClassName;
 			modalContainer.style.position = 'fixed';
@@ -574,32 +637,32 @@ paella.data = null;
 			modalContainer.style.right = '0px';
 			modalContainer.style.bottom = '0px';
 			modalContainer.style.zIndex = 999999;
-	
+
 			var messageContainer = document.createElement('div');
 			messageContainer.className = className;
 			messageContainer.appendChild(domElement);
 			modalContainer.appendChild(messageContainer);
-	
+
 			$('body')[0].appendChild(modalContainer);
-	
+
 			this.currentMessageBox = modalContainer;
 			this._messageContainer = messageContainer;
 			this.adjustTop();
-	
+
 			if (closeButton) {
 				this.createCloseButton();
 			}
 		}
-	
+
 		doShowMessage(message,closeButton,className,onClose) {
 			this.onClose = onClose;
 			$('#playerContainer').addClass("modalVisible");
-	
+
 			if (this.currentMessageBox) {
 				this.close();
 			}
 			if (!className) className = this.messageClassName;
-	
+
 			var modalContainer = document.createElement('div');
 			modalContainer.className = this.modalContainerClassName;
 			modalContainer.style.position = 'fixed';
@@ -608,22 +671,22 @@ paella.data = null;
 			modalContainer.style.right = '0px';
 			modalContainer.style.bottom = '0px';
 			modalContainer.style.zIndex = 999999;
-	
+
 			var messageContainer = document.createElement('div');
 			messageContainer.className = className;
 			messageContainer.innerHTML = message;
 			modalContainer.appendChild(messageContainer);
-	
+
 			if (paella.player && paella.player.isFullScreen()) {
 				paella.player.mainContainer.appendChild(modalContainer);
 			}else{
 				$('body')[0].appendChild(modalContainer);
 			}
-	
+
 			this.currentMessageBox = modalContainer;
 			this._messageContainer = messageContainer;
 			this.adjustTop();
-	
+
 			if (closeButton) {
 				this.createCloseButton();
 			}
@@ -636,14 +699,14 @@ paella.data = null;
 				closeButton = params.closeButton;
 				onClose = params.onClose;
 			}
-	
+
 			this.doShowError(message,closeButton,onClose);
 		}
-	
+
 		doShowError(message,closeButton,onClose) {
 			this.doShowMessage(message,closeButton,this.errorClassName,onClose);
 		}
-	
+
 		createCloseButton() {
 			if (this._messageContainer) {
 				var closeButton = document.createElement('span');
@@ -655,21 +718,21 @@ paella.data = null;
 						this.onCloseButtonClick();
 					}
 				});
-		
+
 			}
 		}
-		
+
 		adjustTop() {
 			if (this.currentMessageBox) {
-	
+
 				var msgHeight = $(this._messageContainer).outerHeight();
 				var containerHeight = $(this.currentMessageBox).height();
-	
+
 				var top = containerHeight/2 - msgHeight/2;
 				this._messageContainer.style.marginTop = top + 'px';
 			}
 		}
-		
+
 		close() {
 			if (this.currentMessageBox && this.currentMessageBox.parentNode) {
 				var msgBox = this.currentMessageBox;
@@ -683,12 +746,12 @@ paella.data = null;
 				}
 			}
 		}
-	
+
 		onCloseButtonClick() {
 			this.close();
 		}
 	}
-	
+
 	paella.MessageBox = MessageBox;
 	paella.messageBox = new paella.MessageBox();
 

@@ -1,28 +1,28 @@
 paella.addPlugin(function() {
 	return class ElasticsearchSaverPlugin extends paella.userTracking.SaverPlugIn {
 		getName() { return "es.upv.paella.usertracking.elasticsearchSaverPlugin"; }
-		
+
 		checkEnabled(onSuccess) {
-			this.type = 'userTrackingSaverPlugIn';
+			// this.type = 'userTrackingSaverPlugIn';
 			this._url = this.config.url;
 			this._index = this.config.index || "paellaplayer";
 			this._type = this.config.type || "usertracking";
-			
+
 			var enabled = true;
 			if (this._url == undefined){
 				enabled = false;
 				base.log.debug("No ElasticSearch URL found in config file. Disabling ElasticSearch PlugIn");
 			}
-			
+
 			onSuccess(enabled);
 		}
-		
-		log(event, params) {	
+
+		log(event, params) {
 			var p = params;
 			if (typeof(p) != "object") {
 				p = {value: p};
 			}
-			
+
 			let currentTime = 0;
 			paella.player.videoContainer.currentTime()
 				.then((t) => {
@@ -37,8 +37,8 @@ paella.addPlugin(function() {
 						time: parseInt(currentTime + paella.player.videoContainer.trimStart()),
 						event: event,
 						params: p
-					};		
-					
+					};
+
 					paella.ajax.post({url:this._url+ "/"+ this._index + "/" + this._type + "/", params:JSON.stringify(log) });
 				});
 		}

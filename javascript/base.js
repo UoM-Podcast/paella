@@ -354,7 +354,7 @@ Class ("base.UserAgent",{
 			this.browser.Chrome = false;
 			this.browser.Vendor = "Microsoft";
 			this.browser.Version.versionString = result[1];
-		} 
+		}
 
 		this.browser.Explorer = /MSIE ([\d\.]+)/.test(userAgentString);
 		if (!this.browser.Explorer) {
@@ -727,7 +727,7 @@ base.parameters = {
 		if (!this.list) {
 			var url = window.location.href;
 			this.list = {};
-			
+      
 			if (/(http|https|file)?:\/\/([a-z0-9.\-_\/\~:]*\?)([a-z0-9.\/\-_\%\=\&]*)\#*/i.test(url)) {
 				var params = RegExp.$3;
 				var paramArray = params.split('&');
@@ -1034,7 +1034,8 @@ base.ajax = {
 		var ajaxObj = jQuery.ajax({
 			url:params.url,
 			data:params.params,
-			type:type
+			type:type,
+      contentType:"application/json"
 		});
 
 		if (typeof(onSuccess)=='function') {
