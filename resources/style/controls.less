@@ -2,15 +2,15 @@
 
 @playbackBarButtonWidth: unit(@playbackBarButtonWidthPx, px);
 
-@playbackControlHeight: unit(@playbackControlHeightPx + 2,px);
+@playbackControlHeight: unit(@playbackControlHeightPx, px);
 
 @playbackControlFullHeight: unit(@playbackControlHeightPx, px);
 
 @playbackBarHeightPx: (@playbackBarButtonHeightPx + @playbackControlHeightPx + 2);
 
-@playbackBarHeight: unit(@playbackBarHeightPx + 2,px);
+@playbackBarHeight: unit(@playbackBarHeightPx + 40,px);
 
-@playbackControlOuterHeight: unit(@playbackControlHeightPx + 2, px);
+@playbackControlOuterHeight: unit(@playbackControlHeightPx + 28, px);
 
 
 
@@ -149,8 +149,8 @@ i.button-icon.icon-screen {
 }
 
 .playbackControls {
-    background-color: @backgroundColor;
-    background-image: @backgroundImage;
+    // background-color: @backgroundColor;
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.8));
     background-size: @backgroundImageSize;
     position: absolute;
     bottom: 0px;
@@ -174,21 +174,26 @@ i.button-icon.icon-screen {
     position:absolute;
     left:0px;
     right:0px;
+    top:40px;
     height: @playbackControlHeight;
-    background-color: rgba(125,125,125,0.5);
-    border-bottom: 1px solid rgba(90,90,90,0.6);
-    border-top: 1px solid rgba(90,90,90,0.6);
+    background-color: rgba(0,0,0,0.5);
+    // border-bottom: 1px solid rgba(90,90,90,0.6);
+    // border-top: 1px solid rgba(90,90,90,0.6);
     cursor: pointer;
 }
 
 .playbackBar:focus {
-    box-shadow: inset 0px 0px 5px 0px @hoverBackgroundColor;
+    outline: none;
+}
+
+.playbackBar:hover {
+    box-shadow: 0px 0px 5px 0px @hoverBackgroundColor;
     outline: none;
 }
 
 .playbackBarFull {
     height: @playbackControlFullHeight;
-    background-color: @mainColor;
+    background-color: rgba(0,0,0,0.5);
     background: @playbackBarBackground;
 }
 
@@ -467,10 +472,10 @@ i.button-icon.icon-screen {
     position: absolute;
 }
 
-#playerContainer_controls_playback_playbackBar {
-    overflow: hidden;
-    background-color: @playbackBarBackgroundInactive;
-}
+// #playerContainer_controls_playback_playbackBar {
+//     overflow: hidden;
+//     background-color: @playbackBarBackgroundInactive;
+// }
 
 .login-link {
     margin-top: 20px;
