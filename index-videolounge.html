@@ -79,11 +79,13 @@
       "captions": []
     };
     if (videoResourceCaptions != "") {
+      var url = decodeURI(videoResourceCaptions);
       dataJSON.captions = [{
         "lang": "en",
         "text": "English",
         "format": "vtt",
-        "url": videoResourceCaptions
+        "url": url,
+        "signed": url.includes("X-Amz-Security-Token")
       }];
     };
 

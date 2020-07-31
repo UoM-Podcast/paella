@@ -146,10 +146,11 @@ paella.captions = {
 
 
 class Caption {
-	constructor(id, format, url, lang, next) {
+	constructor(id, format, url, signed, lang, next) {
 		this._id = id;
 		this._format = format;
 		this._url = url;
+		this._signed = signed;
 		this._captions = undefined;
 		this._index = undefined;
 		
@@ -171,11 +172,11 @@ class Caption {
 	
 	reloadCaptions(next) {
 		var self = this;
-	
+	    console.log(self._url);
 	
 		jQuery.ajax({
 			url: self._url,
-			cache:false,
+			cache:self._signed,
 			type: 'get',
 			dataType: "text"
 		})

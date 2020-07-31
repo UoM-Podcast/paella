@@ -205,7 +205,7 @@ class DefaultVideoLoader extends paella.VideoLoader {
 				if (! /^[a-zA-Z]+:\/\//.test(url)) {
 					url = this.getVideoUrl() + url;
 				}
-				var c = new paella.captions.Caption(i, captions[i].format, url, {code: captions[i].lang, txt: captions[i].text});
+				var c = new paella.captions.Caption(i, captions[i].format, url, captions[i].signed, {code: captions[i].lang, txt: captions[i].text});
 				paella.captions.addCaptions(c);
 			}
 		}
