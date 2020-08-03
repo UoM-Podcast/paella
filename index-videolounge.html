@@ -79,7 +79,7 @@
       "captions": []
     };
     if (videoResourceCaptions != "") {
-      var url = decodeURI(videoResourceCaptions);
+      var url = decodeURIComponent(videoResourceCaptions);
       dataJSON.captions = [{
         "lang": "en",
         "text": "English",
