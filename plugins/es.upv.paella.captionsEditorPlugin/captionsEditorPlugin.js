@@ -1,5 +1,5 @@
 /* Plugin override: PlayButtonOnScreen */
-paella.addPlugin(function() {
+paella.addPlugin(function () {
 	return class PlayButtonOnScreen extends paella.EventDrivenPlugin {
 		constructor() {
 			super();
@@ -27,27 +27,27 @@ paella.addPlugin(function() {
 			this.container.style.width = "100%";
 			this.container.style.height = "100%";
 			paella.player.videoContainer.domElement.appendChild(this.container);
-			$(this.container).click(function(event){thisClass.onPlayButtonClick();});
+			$(this.container).click(function (event) { thisClass.onPlayButtonClick(); });
 
 			var icon = document.createElement('canvas');
 			icon.className = "playButtonOnScreenIcon";
 			this.container.appendChild(icon);
 
-			function repaintCanvas(){
+			function repaintCanvas() {
 				var width = jQuery(thisClass.container).innerWidth();
 				var height = jQuery(thisClass.container).innerHeight();
 
 				icon.width = width;
 				icon.height = height;
 
-				var iconSize = (width<height) ? width/3 : height/3;
+				var iconSize = (width < height) ? width / 3 : height / 3;
 
 				var ctx = icon.getContext('2d');
 				// Play Icon size: 300x300
-				ctx.translate((width-iconSize)/2, (height-iconSize)/2);
+				ctx.translate((width - iconSize) / 2, (height - iconSize) / 2);
 
 				ctx.beginPath();
-				ctx.arc(iconSize/2, iconSize/2 ,iconSize/2, 0, 2*Math.PI, true);
+				ctx.arc(iconSize / 2, iconSize / 2, iconSize / 2, 0, 2 * Math.PI, true);
 				ctx.closePath();
 
 				ctx.strokeStyle = 'white';
@@ -57,10 +57,10 @@ paella.addPlugin(function() {
 				ctx.fill();
 
 				ctx.beginPath();
-				ctx.moveTo(iconSize/3, iconSize/4);
-				ctx.lineTo(3*iconSize/4, iconSize/2);
-				ctx.lineTo(iconSize/3, 3*iconSize/4);
-				ctx.lineTo(iconSize/3, iconSize/4);
+				ctx.moveTo(iconSize / 3, iconSize / 4);
+				ctx.lineTo(3 * iconSize / 4, iconSize / 2);
+				ctx.lineTo(iconSize / 3, 3 * iconSize / 4);
+				ctx.lineTo(iconSize / 3, iconSize / 4);
 
 				ctx.closePath();
 				ctx.fillStyle = 'white';
@@ -68,15 +68,15 @@ paella.addPlugin(function() {
 
 				ctx.stroke();
 			}
-			paella.events.bind(paella.events.resize,repaintCanvas);
+			paella.events.bind(paella.events.resize, repaintCanvas);
 			repaintCanvas();
 		}
 
 		getEvents() {
-			return [paella.events.endVideo,paella.events.play,paella.events.pause,paella.events.showEditor,paella.events.hideEditor,'paella:showCaptionsEditor','paella:hideCaptionsEditor'];
+			return [paella.events.endVideo, paella.events.play, paella.events.pause, paella.events.showEditor, paella.events.hideEditor, 'paella:showCaptionsEditor', 'paella:hideCaptionsEditor'];
 		}
 
-		onEvent(eventType,params) {
+		onEvent(eventType, params) {
 			switch (eventType) {
 				case paella.events.endVideo:
 					this.endVideo();
@@ -158,7 +158,7 @@ paella.addPlugin(function() {
 
 
 /* captionsEditorPlugin */
-paella.addPlugin(function() {
+paella.addPlugin(function () {
 	return class CaptionsEditorPlugin extends paella.ButtonPlugin {
 		getInstanceName() { return "captionsEditorPlugin"; }	// plugin instance will be available in paella.plugins.captionsEditorPlugin
 		getAlignment() { return 'right'; }
@@ -211,37 +211,37 @@ paella.addPlugin(function() {
 
 			let profileVideosObject = [{
 				content: (content.length > 0 ? content[0] : "presenter"),
-				rect:[
-					{ aspectRatio:"16/9",left:0,top:0,width:640,height:360 },
+				rect: [
+					{ aspectRatio: "16/9", left: 0, top: 0, width: 640, height: 360 },
 				],
 				buttons: [],
-				visible:"true",
-				layer:"1"
+				visible: "true",
+				layer: "1"
 			}];
 
-			for (let i=1; i<content.length; i++) {
+			for (let i = 1; i < content.length; i++) {
 				profileVideosObject.push({
-					content:content[i],
-					visible:"false",
-					layer:"0"
+					content: content[i],
+					visible: "false",
+					layer: "0"
 				});
 			}
 
 			paella.addProfile(() => {
-		    return new Promise((resolve,reject) => {
+				return new Promise((resolve, reject) => {
 					resolve({
-						id:self._profileId,
+						id: self._profileId,
 						name: {
 							en: "Edit subtitles",
 							es: "Editar subtítulos"
 						},
-						hidden:true,
-						icon:"",
+						hidden: true,
+						icon: "",
 						videos: profileVideosObject,
-						logos:[{content:"paella_logo.png",zIndex:5,rect:{top:10,left:10,width:49,height:42}}]
+						logos: [{ content: "paella_logo.png", zIndex: 5, rect: { top: 10, left: 10, width: 49, height: 42 } }]
 					})
-		    });
-		  });
+				});
+			});
 		}
 
 		setup() {
@@ -254,7 +254,7 @@ paella.addPlugin(function() {
 				paella.plugins.captionsEditorPlugin.hideUI();
 			}
 			//need to clean this soon but for no will do the job
-			paella.captions.getClosestCaptionAtTime = function(cid, time) {
+			paella.captions.getClosestCaptionAtTime = function (cid, time) {
 				var c = this.getCaptions(cid);
 				if (c != undefined) {
 					return c.getClosestCaptionAtTime(time);
@@ -264,7 +264,7 @@ paella.addPlugin(function() {
 
 			paella.captions._getClosestCaptionAtTime = paella.captions.getClosestCaptionAtTime
 
-			paella.captions.Caption.prototype.setCaptionByIndex = function(index, obj) {
+			paella.captions.Caption.prototype.setCaptionByIndex = function (index, obj) {
 				if (this._captions != undefined && this._captions.length > index) {
 					if ("begin" in obj) this._captions[index]["begin"] = obj.begin;
 					if ("end" in obj) this._captions[index]["end"] = obj.end;
@@ -274,13 +274,13 @@ paella.addPlugin(function() {
 				return false;
 			}
 
-			paella.captions.Caption.prototype.getClosestCaptionAtTime = function(time) {
+			paella.captions.Caption.prototype.getClosestCaptionAtTime = function (time) {
 				if (this._captions != undefined) {
-					for (var i=0; i<this._captions.length; ++i) {
+					for (var i = 0; i < this._captions.length; ++i) {
 						if (time <= this._captions[i].end) return this._captions[i];
 					}
 					if (this._captions.length)
-						return this._captions[this._captions.length-1];
+						return this._captions[this._captions.length - 1];
 				}
 				return undefined;
 			}
@@ -297,34 +297,34 @@ paella.addPlugin(function() {
 			});*/
 
 
-			paella.events.bind(paella.events.captionsEnabled, function(event,params) {
+			paella.events.bind(paella.events.captionsEnabled, function (event, params) {
 				if (self._open)
-				  self.onCaptionsUpdate(params);
+					self.onCaptionsUpdate(params);
 			});
 
-			paella.events.bind(paella.events.captionsDisabled, function(event,params) {
+			paella.events.bind(paella.events.captionsDisabled, function (event, params) {
 				if (self._open)
-				  self.onCaptionsUpdate(params);
+					self.onCaptionsUpdate(params);
 			});
 
-			paella.events.bind(paella.events.captionAdded, function(event,params) {
+			paella.events.bind(paella.events.captionAdded, function (event, params) {
 				//if (self._open) {
-				  self.onCaptionAdded(params);
-				  paella.plugins.captionsEditorPlugin.showUI();
+				self.onCaptionAdded(params);
+				paella.plugins.captionsEditorPlugin.showUI();
 				//}
 			});
 
-			paella.events.bind(paella.events.timeUpdate, function(event,params) {
+			paella.events.bind(paella.events.timeUpdate, function (event, params) {
 				if (self._open)
-				  self.onTimeUpdate(params);
+					self.onTimeUpdate(params);
 			});
 
-			paella.events.bind(paella.events.controlBarWillHide, function(evt) {
+			paella.events.bind(paella.events.controlBarWillHide, function (evt) {
 				if (self._open)
 					paella.player.controls.cancelHideBar();
 			});
 
-			paella.events.bind(paella.events.resize, function(evt) {
+			paella.events.bind(paella.events.resize, function (evt) {
 				if (self._open)
 					self.onResize();
 			});
@@ -343,7 +343,7 @@ paella.addPlugin(function() {
 							if (!self._currentSegment || caption.id != self._currentSegment.id) {
 								self._currentSegment = caption;
 								let currentSegmentElem = $(self._container).find('.captionsEditorSegmentContainer .captionsEditorSegment.current').removeClass('current').addClass('viewed');
-								$(self._container).find('.captionsEditorSegmentContainer .captionsEditorSegment[data-id="'+self._currentSegment.id+'"]').addClass("current");
+								$(self._container).find('.captionsEditorSegmentContainer .captionsEditorSegment[data-id="' + self._currentSegment.id + '"]').addClass("current");
 
 								if (self._autoScroll) {
 									self.updateScrollFocus(currentSegmentElem);
@@ -361,7 +361,7 @@ paella.addPlugin(function() {
 				let parentScrollTop = $(".captionsEditorSegmentContainer").scrollTop();
 				let h = $(self._body).height();
 				if (pos && pos.top)
-				  $(".captionsEditorSegmentContainer").stop().animate({'scrollTop': (parentScrollTop + pos.top - h/4)});
+					$(".captionsEditorSegmentContainer").stop().animate({ 'scrollTop': (parentScrollTop + pos.top - h / 4) });
 			}
 		}
 
@@ -389,7 +389,7 @@ paella.addPlugin(function() {
 			var self = this;
 			if (self._currentSegment) {
 				paella.player.videoContainer.seekToTime(self._currentSegment.begin);
-				paella.player.playing().then(function(res) {
+				paella.player.playing().then(function (res) {
 					if (!res) paella.player.play();
 				});
 			}
@@ -399,8 +399,8 @@ paella.addPlugin(function() {
 			var self = this;
 			if (self._activeCaptions && self._currentSegment) {
 				let currentIndex = self._activeCaptions._captions.findIndex(c => c.id == self._currentSegment.id);
-				if (currentIndex && currentIndex >= 0 && currentIndex != self._activeCaptions._captions.length-1) {
-					paella.player.videoContainer.seekToTime(self._activeCaptions._captions[currentIndex+1].begin);
+				if (currentIndex && currentIndex >= 0 && currentIndex != self._activeCaptions._captions.length - 1) {
+					paella.player.videoContainer.seekToTime(self._activeCaptions._captions[currentIndex + 1].begin);
 					return true;
 				}
 			}
@@ -412,7 +412,7 @@ paella.addPlugin(function() {
 			if (self._activeCaptions && self._currentSegment) {
 				let currentIndex = self._activeCaptions._captions.findIndex(c => c.id == self._currentSegment.id);
 				if (currentIndex && currentIndex > 0) {
-					paella.player.videoContainer.seekToTime(self._activeCaptions._captions[currentIndex-1].begin);
+					paella.player.videoContainer.seekToTime(self._activeCaptions._captions[currentIndex - 1].begin);
 					return true;
 				}
 			}
@@ -424,13 +424,13 @@ paella.addPlugin(function() {
 			self._browserLang = base.dictionary.currentLanguage();
 			self._autoScroll = true;
 
-			switch(self._open) {
+			switch (self._open) {
 				case 0:
 					self._activeCaptions = paella.captions.getActiveCaptions();
 					if (true) { //self._activeCaptions
 						self._open = 1;
 
-						$('.'+self.getSubclass()).addClass('selected');
+						$('.' + self.getSubclass()).addClass('selected');
 
 						paella.keyManager.enabled = false;
 						// paella.player.videoContainer.disablePlayOnClick();
@@ -454,7 +454,7 @@ paella.addPlugin(function() {
 						paella.events.trigger('paella:showCaptionsEditor');
 
 						// Register global shortcuts
-						$(document).on("keydown.paellaCaptionsEditor", function(e) {
+						$(document).on("keydown.paellaCaptionsEditor", function (e) {
 							if (e.keyCode == 38) { // Up arrow
 								if (!self._isEditingSegment) {
 									self.goToPrevSegment();
@@ -486,7 +486,7 @@ paella.addPlugin(function() {
 								return false;
 							}
 							if (e.keyCode == 9) { // TAB
-								paella.player.playing().then(function(res) {
+								paella.player.playing().then(function (res) {
 									if (res) paella.player.pause();
 									else paella.player.play();
 								});
@@ -501,7 +501,7 @@ paella.addPlugin(function() {
 				case 1:
 					self._open = 0;
 
-					$('.'+self.getSubclass()).removeClass('selected');
+					$('.' + self.getSubclass()).removeClass('selected');
 
 					$(self._container).remove();
 					paella.keyManager.enabled = true;
@@ -541,7 +541,7 @@ paella.addPlugin(function() {
 
 			self._toolbar = document.createElement('div');
 			self._toolbar.className = 'captionsEditorPluginToolbar';
-			self._toolbar.onclick = function(e) {
+			self._toolbar.onclick = function (e) {
 				e.preventDefault();
 				e.stopPropagation();
 				return false;
@@ -563,7 +563,7 @@ paella.addPlugin(function() {
 
 			$(self._body).empty().append('<div class="captionsEditorSegmentContainer"></div>');
 
-			self._activeCaptions && self._activeCaptions._captions.forEach(function(segment, idx) {
+			self._activeCaptions && self._activeCaptions._captions.forEach(function (segment, idx) {
 				let segmentDiv = document.createElement('div');
 				segmentDiv.className = 'captionsEditorSegment';
 				segmentDiv.setAttribute('data-b', segment.begin.toFixed(2));
@@ -584,23 +584,22 @@ paella.addPlugin(function() {
 				segmentDiv.appendChild(segmentTimeContainer);
 
 				let segmentButton = document.createElement('div');
-				segmentButton.className="captionsEditorSegmentButton buttonPlugin";
+				segmentButton.className = "captionsEditorSegmentButton buttonPlugin";
 
 				let segmentButtonIcon = document.createElement('i');
-				segmentButtonIcon.className="button-icon icon-spinner11";
-				segmentButtonIcon.onclick = function(e) {
+				segmentButtonIcon.className = "button-icon icon-spinner11";
+				segmentButtonIcon.onclick = function (e) {
 					let segment = this.parentElement.parentElement;
 					if (!self._currentSegment || $(segment).attr('data-id') != self._currentSegment.id) {
 						let b = parseFloat($(segment).attr('data-b'));
 						let e = parseFloat($(segment).attr('data-e'));
-						paella.player.videoContainer.currentTime().then(function(time) {
+						paella.player.videoContainer.currentTime().then(function (time) {
 							if (time < b || time > e)
-							paella.player.videoContainer.seekToTime(b + 0.05);
+								paella.player.videoContainer.seekToTime(b + 0.05);
 							paella.player.play()
 						});
 					}
-					else
-					{
+					else {
 						self.replayCurrentSegment();
 					}
 					e.stopPropagation();
@@ -619,14 +618,14 @@ paella.addPlugin(function() {
 				$(self._body).children('.captionsEditorSegmentContainer').append(segmentDiv);
 
 				/* Segment events */
-				$(segmentDiv).on("click", function(e) {
+				$(segmentDiv).on("click", function (e) {
 					let segment = this;
 					if (!self._currentSegment || $(segment).attr('data-id') != self._currentSegment.id) {
 						let b = parseFloat($(segment).attr('data-b'));
 						let e = parseFloat($(segment).attr('data-e'));
-						paella.player.videoContainer.currentTime().then(function(time) {
+						paella.player.videoContainer.currentTime().then(function (time) {
 							if (time < b || time > e)
-						    paella.player.videoContainer.seekToTime(b + 0.05);
+								paella.player.videoContainer.seekToTime(b + 0.05);
 						});
 					}
 					e.stopPropagation();
@@ -634,15 +633,15 @@ paella.addPlugin(function() {
 					return false;
 				});
 
-				$(segmentText).on("click", function(e) {
+				$(segmentText).on("click", function (e) {
 					let segment = $(this).closest('.captionsEditorSegment');
 					paella.player.pause();
 					if (!self._currentSegment || $(segment).attr('data-id') != self._currentSegment.id) {
 						let b = parseFloat($(segment).attr('data-b'));
 						let e = parseFloat($(segment).attr('data-e'));
-						paella.player.videoContainer.currentTime().then(function(time) {
+						paella.player.videoContainer.currentTime().then(function (time) {
 							if (time < b || time > e)
-						    paella.player.videoContainer.seekToTime(b + 0.05);
+								paella.player.videoContainer.seekToTime(b + 0.05);
 						});
 					}
 					self._isEditingSegment = true;
@@ -651,7 +650,7 @@ paella.addPlugin(function() {
 					return false;
 				});
 
-				$(segmentText).on("blur focusout", function(e) {
+				$(segmentText).on("blur focusout", function (e) {
 					self._debugMode && console.log("Finished editing segment");
 					self._isEditingSegment = false;
 					let segment = $(this).closest('.captionsEditorSegment');
@@ -666,7 +665,7 @@ paella.addPlugin(function() {
 					return false;
 				});
 
-				$(segmentText).on("keyup DOMSubtreeModified", function(e) {
+				$(segmentText).on("keyup DOMSubtreeModified", function (e) {
 					let segment = $(this).closest('.captionsEditorSegment');
 					if (self._activeCaptions.setCaptionByIndex($(segment).attr('data-index'), {
 						content: $(segment).find('.captionsEditorSegmentText').text()
@@ -679,7 +678,7 @@ paella.addPlugin(function() {
 					return false;
 				});
 
-				$(segmentText).on("keydown", function(e) {
+				$(segmentText).on("keydown", function (e) {
 					if (e.keyCode == 13) { // Enter
 						$(this).trigger("blur");
 						e.stopPropagation();
@@ -688,14 +687,14 @@ paella.addPlugin(function() {
 					}
 				});
 
-				$(segmentTimeBegin).on("click", function(e) {
+				$(segmentTimeBegin).on("click", function (e) {
 					let segment = $(this).closest('.captionsEditorSegment');
 					e.stopPropagation();
 					e.preventDefault();
 					return false;
 				});
 
-				$(segmentTimeEnd).on("click", function(e) {
+				$(segmentTimeEnd).on("click", function (e) {
 					let segment = $(this).closest('.captionsEditorSegment');
 					e.stopPropagation();
 					e.preventDefault();
@@ -716,13 +715,12 @@ paella.addPlugin(function() {
 				defOption.value = "";
 				captionselector.add(defOption);
 
-				paella.captions.getAvailableLangs().forEach(function(l){
+				paella.captions.getAvailableLangs().forEach(function (l) {
 					var option = document.createElement("option");
 					option.text = l.lang.txt;
 					option.value = l.id;
-					if (paella.captions.getActiveCaptions() && l.id == paella.captions.getActiveCaptions()._captionsProvider+':'+paella.captions.getActiveCaptions()._id)
-					{
-						option.selected="selected"
+					if (paella.captions.getActiveCaptions() && l.id == paella.captions.getActiveCaptions()._captionsProvider + ':' + paella.captions.getActiveCaptions()._id) {
+						option.selected = "selected"
 					}
 					captionselector.add(option);
 				});
@@ -733,16 +731,16 @@ paella.addPlugin(function() {
 				self._toolbar.appendChild(captionselector);
 
 				//jQuery SELECT
-				$(captionselector).change(function(){
+				$(captionselector).change(function () {
 					//move to another funcion if needed
 					var thisClass = this;
 
 					var sel = this.value
-					   if(sel == ""){
-						   //clean body
-						   paella.captions.setActiveCaptions(sel);
-						   return;
-					   } // BREAK IF NO ONE SELECTED
+					if (sel == "") {
+						//clean body
+						paella.captions.setActiveCaptions(sel);
+						return;
+					} // BREAK IF NO ONE SELECTED
 					paella.captions.setActiveCaptions(sel);
 					paella.plugins.captionsEditorPlugin.buildBodyContent()
 				});
@@ -752,7 +750,7 @@ paella.addPlugin(function() {
 					let saveButton = document.createElement('button');
 					saveButton.className = 'captionsEditorToolbarButton';
 					saveButton.innerText = base.dictionary.translate("Save");
-					saveButton.onclick = function(e) {
+					saveButton.onclick = function (e) {
 						self.save();
 						e.stopPropagation();
 						e.preventDefault();
@@ -765,7 +763,7 @@ paella.addPlugin(function() {
 				let exportButton = document.createElement('button');
 				exportButton.className = 'captionsEditorToolbarButton';
 				exportButton.innerText = base.dictionary.translate("Export");
-				exportButton.onclick = function(e) {
+				exportButton.onclick = function (e) {
 					self.exportDialog();
 					e.stopPropagation();
 					e.preventDefault();
@@ -777,7 +775,7 @@ paella.addPlugin(function() {
 				let importButton = document.createElement('button');
 				importButton.className = 'captionsEditorToolbarButton';
 				importButton.innerText = base.dictionary.translate("Import");
-				importButton.onclick = function(e) {
+				importButton.onclick = function (e) {
 					self.importDialog();
 					e.stopPropagation();
 					e.preventDefault();
@@ -790,7 +788,7 @@ paella.addPlugin(function() {
 				let exitButton = document.createElement('button');
 				exitButton.className = 'captionsEditorToolbarButton';
 				exitButton.innerText = base.dictionary.translate("Close");
-				exitButton.onclick = function(e) {
+				exitButton.onclick = function (e) {
 					self.action();
 					e.stopPropagation();
 					e.preventDefault();
@@ -802,7 +800,7 @@ paella.addPlugin(function() {
 				let helpButton = document.createElement('button');
 				helpButton.className = 'captionsEditorToolbarButton';
 				helpButton.innerText = base.dictionary.translate("Help");
-				helpButton.onclick = function(e) {
+				helpButton.onclick = function (e) {
 					self.showHelp();
 					e.stopPropagation();
 					e.preventDefault();
@@ -835,8 +833,8 @@ paella.addPlugin(function() {
 				var date = new Date(null);
 				date.setSeconds(seconds);
 				var decimalStr = "";
-				if (decimals > 0) decimalStr = decimalChar+(seconds % 1).toFixed(decimals).substring(2);
-				let timeStr = date.toISOString().substr(11, 8)+decimalStr;
+				if (decimals > 0) decimalStr = decimalChar + (seconds % 1).toFixed(decimals).substring(2);
+				let timeStr = date.toISOString().substr(11, 8) + decimalStr;
 				if (shorten && timeStr.substr(0, 3) == '00:') return timeStr.substr(3);
 				return timeStr;
 			}
@@ -853,7 +851,7 @@ paella.addPlugin(function() {
 			var self = this;
 
 			// Pause if playing
-			paella.player.playing().then(function(res) {
+			paella.player.playing().then(function (res) {
 				if (res) paella.player.pause();
 				else paella.player.play();
 			});
@@ -866,7 +864,7 @@ paella.addPlugin(function() {
 			}
 			// DataDelegate: wait for implemented DataDelegate response
 			else {
-				paella.data.write('captionsEditor', {id:paella.initDelegate.getId()}, self._activeCaptionsToSaveObject(), (response,status) => {
+				paella.data.write('captionsEditor', { id: paella.initDelegate.getId() }, self._activeCaptionsToSaveObject(), (response, status) => {
 					if (status) {
 						self.onSaveCallback((typeof response === 'object' ? JSON.stringify(response) : response), null, nextActiveCaptions);
 					}
@@ -894,10 +892,10 @@ paella.addPlugin(function() {
 			var self = this;
 			if (self._editedIndexes.length || self._removedIndexes.length) {
 				self.showDialog(base.dictionary.translate('You have made changes to the subtitles. If you continue without saving, all your changes will be lost.'), '<button id="captionsEditorDialogSaveAndContinueButton" class="captionsEditorButton">' + base.dictionary.translate('Save and continue') + '</button>');
-				$('#captionsEditorDialogSaveAndContinueButton').click(function(e) {
+				$('#captionsEditorDialogSaveAndContinueButton').click(function (e) {
 					self.save(nextActiveCaptions);
 				});
-				$('#captionsEditorDialogExitButton').click(function(e) {
+				$('#captionsEditorDialogExitButton').click(function (e) {
 					self._editedIndexes = [];
 					self._removedIndexes = [];
 					self._activeCaptions = nextActiveCaptions;
@@ -911,79 +909,79 @@ paella.addPlugin(function() {
 		}
 
 		export(format) {
-		    if (!this._activeCaptions) return false;
+			if (!this._activeCaptions) return false;
 
-		    var self = this;
-		    let mimeType, textData;
+			var self = this;
+			let mimeType, textData;
 
-		    if (format == 'srt') {
-		      // Export to SubRip (SRT)
-		      textData = self._activeCaptions._captions.reduce((text, sub, index) => {
-		        return text + (index+1) + "\n" + self._timeFormat(sub.begin, 3, ',') + " --> " + self._timeFormat(sub.end, 3, ',') + "\n" + sub.content.replace(/"/g, "&quot;").replace(/<br>/g, "\n").replace(/\/([^\/]*)\/([^\/]*)\//gi, "$2").replace(/\s\[hesitation\]/gi, "").replace(/\[hesitation\]\s/gi, "").replace(/\[hesitation\]/gi, "") + "\n\n";
-		      }, "");
-		      mimeType = 'text/srt';
-		    }
+			if (format == 'srt') {
+				// Export to SubRip (SRT)
+				textData = self._activeCaptions._captions.reduce((text, sub, index) => {
+					return text + (index + 1) + "\n" + self._timeFormat(sub.begin, 3, ',') + " --> " + self._timeFormat(sub.end, 3, ',') + "\n" + sub.content.replace(/"/g, "&quot;").replace(/<br>/g, "\n").replace(/\/([^\/]*)\/([^\/]*)\//gi, "$2").replace(/\s\[hesitation\]/gi, "").replace(/\[hesitation\]\s/gi, "").replace(/\[hesitation\]/gi, "") + "\n\n";
+				}, "");
+				mimeType = 'text/srt';
+			}
 
-		    if (format == 'vtt') {
-		      // Export to WebVTT
-		      textData = "WEBVTT\n\n";
-		      textData += self._activeCaptions._captions.reduce((text, sub, index) => {
-		        return text + (index+1) + "\n" + self._timeFormat(sub.begin, 3, '.') + " --> " + self._timeFormat(sub.end, 3, '.') + "\n" + sub.content.replace(/"/g, "&quot;").replace(/<br>/g, "\n").replace(/\/([^\/]*)\/([^\/]*)\//gi, "$2").replace(/\s\[hesitation\]/gi, "").replace(/\[hesitation\]\s/gi, "").replace(/\[hesitation\]/gi, "") + "\n\n";
-		      }, "");
-		      mimeType = 'text/vtt';
-		    }
+			if (format == 'vtt') {
+				// Export to WebVTT
+				textData = "WEBVTT\n\n";
+				textData += self._activeCaptions._captions.reduce((text, sub, index) => {
+					return text + (index + 1) + "\n" + self._timeFormat(sub.begin, 3, '.') + " --> " + self._timeFormat(sub.end, 3, '.') + "\n" + sub.content.replace(/"/g, "&quot;").replace(/<br>/g, "\n").replace(/\/([^\/]*)\/([^\/]*)\//gi, "$2").replace(/\s\[hesitation\]/gi, "").replace(/\[hesitation\]\s/gi, "").replace(/\[hesitation\]/gi, "") + "\n\n";
+				}, "");
+				mimeType = 'text/vtt';
+			}
 
-		    if (format == 'txt') {
-		      // Export to plain text
-		      textData = self._activeCaptions._captions.reduce((text, sub, index) => {
-		        return text + sub.content.replace(/"/g, "&quot;").replace(/<br>/g, "\n").replace(/\/([^\/]*)\/([^\/]*)\//gi, "$2").replace(/\s\[hesitation\]/gi, "").replace(/\[hesitation\]\s/gi, "").replace(/\[hesitation\]/gi, "") + "\n";
-		      }, "");
-		      mimeType = 'text/plain';
-		    }
+			if (format == 'txt') {
+				// Export to plain text
+				textData = self._activeCaptions._captions.reduce((text, sub, index) => {
+					return text + sub.content.replace(/"/g, "&quot;").replace(/<br>/g, "\n").replace(/\/([^\/]*)\/([^\/]*)\//gi, "$2").replace(/\s\[hesitation\]/gi, "").replace(/\[hesitation\]\s/gi, "").replace(/\[hesitation\]/gi, "") + "\n";
+				}, "");
+				mimeType = 'text/plain';
+			}
 
-		    if (format == 'jsn') {
-		      // IBM JSON
-		      let ibmJson = {
-		        "results": []
-		      };
+			if (format == 'jsn') {
+				// IBM JSON
+				let ibmJson = {
+					"results": []
+				};
 
-		      self._activeCaptions._captions.forEach((sub) => {
-		        let alts = {
-		          "alternatives": [{
-		            "timestamps": [[sub.content, sub.begin, sub.end]],
-		            "confidence": 1.0,
-		            "word_confidence": [1.0],
-		            "transcript": sub.content
-		          }],
-		          "final": true
-		        };
+				self._activeCaptions._captions.forEach((sub) => {
+					let alts = {
+						"alternatives": [{
+							"timestamps": [[sub.content, sub.begin, sub.end]],
+							"confidence": 1.0,
+							"word_confidence": [1.0],
+							"transcript": sub.content
+						}],
+						"final": true
+					};
 
-		        ibmJson.results.push(alts);
-		      });
-
-		      textData = JSON.stringify(ibmJson, null, 2);
-		      mimeType = 'application/json';
-		      format = 'json';
-		    }
-
-		    let a = document.createElement('a');
-		    a.setAttribute("href", window.URL.createObjectURL(new Blob([textData], {type: mimeType+";charset=utf-8"})));
-		    a.setAttribute("download", (paella.player.videoIdentifier ? paella.player.videoIdentifier : "captions") + "." + format);
-		    document.body.appendChild(a);
-		    a.click();
-		    window.URL.revokeObjectURL(a.href);
-	    }
-
-	    exportDialog() {
-	    	var self = this;
-
-	    	// Pause if playing
-				paella.player.playing().then(function(res) {
-					if (res) paella.player.pause();
-					else paella.player.play();
+					ibmJson.results.push(alts);
 				});
 
-	    	let htmlStr = '\
+				textData = JSON.stringify(ibmJson, null, 2);
+				mimeType = 'application/json';
+				format = 'json';
+			}
+
+			let a = document.createElement('a');
+			a.setAttribute("href", window.URL.createObjectURL(new Blob([textData], { type: mimeType + ";charset=utf-8" })));
+			a.setAttribute("download", (paella.player.videoIdentifier ? paella.player.videoIdentifier : "captions") + "." + format);
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(a.href);
+		}
+
+		exportDialog() {
+			var self = this;
+
+			// Pause if playing
+			paella.player.playing().then(function (res) {
+				if (res) paella.player.pause();
+				else paella.player.play();
+			});
+
+			let htmlStr = '\
 					<h5>Select the subtitles format:</h5>\
 					<div class="select">\
 	            <select id="captionsEditorExportFormat">\
@@ -994,48 +992,48 @@ paella.addPlugin(function() {
 	            </select>\
 	            <div class="select__arrow"></div>\
 	        </div>';
-				let htmlButtons = '<button id="captionsEditorDialogExportButton" class="captionsEditorButton">Descargar</button>';
-				this.showDialog(htmlStr, htmlButtons);
-				$('#captionsEditorDialogExportButton').click(function(e) {
-					self.export($('#captionsEditorExportFormat').val());
-					self.closeAllDialogs();
-				});
-	    }
+			let htmlButtons = '<button id="captionsEditorDialogExportButton" class="captionsEditorButton">Descargar</button>';
+			this.showDialog(htmlStr, htmlButtons);
+			$('#captionsEditorDialogExportButton').click(function (e) {
+				self.export($('#captionsEditorExportFormat').val());
+				self.closeAllDialogs();
+			});
+		}
 
 		import(file) {
-		    if (!this._activeCaptions) return false;
+			if (!this._activeCaptions) return false;
 
-		    var self = this;
+			var self = this;
 
-		    if (window.File && window.FileReader && window.FileList && window.Blob) {
-		      let fr = new FileReader();
-		      fr.onload = (e) => {
-		        let subs = [];
-		        let fileExtension = /(?:\.([^.]+))?$/.exec(file.name)[1];
+			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				let fr = new FileReader();
+				fr.onload = (e) => {
+					let subs = [];
+					let fileExtension = /(?:\.([^.]+))?$/.exec(file.name)[1];
 
-						// TODO
-		        if (fileExtension == 'srt' || typeof fileExtension === 'undefined') subs = self.parseSrt(e.target.result);
-		        else if (fileExtension == 'vtt') subs = self.parseVtt(e.target.result);
-		        else {
-		          self.showDialog('Subtitles format not supported');
-		        }
+					// TODO
+					if (fileExtension == 'srt' || typeof fileExtension === 'undefined') subs = self.parseSrt(e.target.result);
+					else if (fileExtension == 'vtt') subs = self.parseVtt(e.target.result);
+					else {
+						self.showDialog('Subtitles format not supported');
+					}
 
-		        if (subs.length > 0) {
-		        }
-		        else {
-		        	self.showDialog('Error reading subtitles file');
-		        }
-		      };
-		      fr.readAsText(file);
-		    }
-		    else {
-		    	self.showDialog('Your browser does not support HTML5 File API');
-		    }
+					if (subs.length > 0) {
+					}
+					else {
+						self.showDialog('Error reading subtitles file');
+					}
+				};
+				fr.readAsText(file);
+			}
+			else {
+				self.showDialog('Your browser does not support HTML5 File API');
+			}
 		}
 
 		importDialog() {
 			// Pause if playing
-			paella.player.playing().then(function(res) {
+			paella.player.playing().then(function (res) {
 				if (res) paella.player.pause();
 				else paella.player.play();
 			});
@@ -1046,7 +1044,7 @@ paella.addPlugin(function() {
 			<p style="margin-top: 5px; color: #777; font-size: small">' + base.dictionary.translate("Supported formats") + ': SubRip (.srt), WebVTT (.vtt)</p>';
 			let htmlButtons = '<button id="captionsEditorDialogImportButton" class="captionsEditorButton">' + base.dictionary.translate("Import") + '</button>';
 			this.showDialog(htmlStr, htmlButtons);
-			$('#captionsEditorDialogImportButton').click(function(e) {
+			$('#captionsEditorDialogImportButton').click(function (e) {
 				self.import($('#captionsEditorImportInput').val());
 				self.closeAllDialogs();
 			});
@@ -1078,7 +1076,7 @@ paella.addPlugin(function() {
 				</div>';
 
 			$('<div class="captionsEditorDialog"><div class="captionsEditorDialogBody">' + htmlString + '</div></div>').appendTo(document.body);
-			$('#captionsEditorDialogExitButton').click(function(e) {
+			$('#captionsEditorDialogExitButton').click(function (e) {
 				self.closeAllDialogs();
 			});
 		}
