@@ -446,7 +446,7 @@
 			container.className = "play-button-on-screen";
 			container.style.width = "100%";
 			container.style.height = "100%";
-			container.style.pointerEvents = "none";
+			// container.style.pointerEvents = "none";
 
 			let icon = document.createElement('div');
 			icon['className'] = 'play-icon';
