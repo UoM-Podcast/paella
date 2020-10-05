@@ -9,6 +9,7 @@ const	gulp = require('gulp'),
 		fs = require('fs'),
 		uglify = require('gulp-uglify-es').default,
 		path = require('path'),
+		rename = require("gulp-rename"),
 
 		exec = require('child_process').execSync,
 
@@ -178,7 +179,9 @@ gulp.task("copy", function() {
 		gulp.src('node_modules/requirejs/require.js')
 			.pipe(gulp.dest(`${config.outDir}player/javascript/`)),
 
-		gulp.src('node_modules/lunr/lunr.min.js')
+		gulp.src('node_modules/lunr/lunr.js')
+			.pipe(rename('lunr.min.js'))
+			.pipe(uglify())
 			.pipe(gulp.dest(`${config.outDir}player/javascript/`)),
 
 		gulp.src('resources/bootstrap/**')
@@ -196,15 +199,18 @@ gulp.task("copy", function() {
 		gulp.src('node_modules/@babel/polyfill/dist/polyfill.min.js')
 			.pipe(gulp.dest(`${config.outDir}player/javascript`)),
 
-		gulp.src('node_modules/bg2engine/js/bg2e-es2015.js')
-			.pipe(gulp.dest(`${config.outDir}player/javascript`))
+		gulp.src('node_modules/bg2e-js/js/bg2e-es2015.js')
+			.pipe(gulp.dest(`${config.outDir}player/javascript`)),
+
+		gulp.src('node_modules/hls.js/dist/hls.min.js')
+			.pipe(gulp.dest(`${config.outDir}/player/javascript`))
 	];
 
 	function addPlugins(pluginPath) {
 		fs.readdirSync(pluginPath).forEach((dir) => {
-			var fullDir = path.join('plugins',dir);
-			var resourcesDir = path.join(fullDir,'resources/**');
-			var depsDir = path.join(fullDir,'deps/**');
+			var fullDir = `plugins/${ dir }`;
+			var resourcesDir = `${ fullDir }/resources/**`;
+			var depsDir = `${ fullDir }/deps/**`;
 			p.push(gulp.src(resourcesDir)
 				.pipe(gulp.dest(`${config.outDir}player/resources/style`)));
 			p.push(gulp.src(depsDir)

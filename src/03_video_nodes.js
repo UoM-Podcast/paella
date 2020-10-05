@@ -116,6 +116,7 @@ class VideoRect extends paella.DomNode {
 		let eventCapture = document.createElement('div');
 		setTimeout(() => this.domElement.parentElement.appendChild(eventCapture), 10);
 
+		eventCapture.id = id + "EventCapture";
 		eventCapture.style.position = "absolute";
 		eventCapture.style.top = "0px";
 		eventCapture.style.left = "0px";
@@ -404,8 +405,44 @@ class VideoRect extends paella.DomNode {
 				paella.events.trigger(paella.events.videoZoomChanged,{ video:this });
 			}
 
+			let altScrollMessageContainer = document.createElement('div');
+			altScrollMessageContainer.className = "alt-scroll-message-container";
+			altScrollMessageContainer.innerHTML = "<p>" + paella.dictionary.translate("Use Alt+Scroll to zoom the video") + "</p>";
+			eventCapture.appendChild(altScrollMessageContainer);
+			$(altScrollMessageContainer).css({ opacity: 0.0 });
+			let altScrollMessageTimer = null;
+			function clearAltScrollMessage(animate = true) {
+				animate ? 
+					$(altScrollMessageContainer).animate({ opacity: 0.0 }) :
+					$(altScrollMessageContainer).css({ opacity: 0.0 });
+			}
+			function showAltScrollMessage() {
+				if (altScrollMessageTimer) {
+					clearTimeout(altScrollMessageTimer);
+					altScrollMessageTimer = null;
+				}
+				else {
+					$(altScrollMessageContainer).css({ opacity: 1.0 });
+				}
+				altScrollMessageTimer = setTimeout(() => {
+					clearAltScrollMessage();
+					altScrollMessageTimer = null;
+				}, 500);
+			}
+
 			$(eventCapture).on('mousewheel wheel',(evt) => {
 				if (!this.allowZoom() || !this._zoomAvailable) return;
+				if (!evt.altKey) {
+					showAltScrollMessage();
+					return;
+				}
+				else {
+					clearAltScrollMessage(false);
+					if (altScrollMessageTimer) {
+						clearTimeout(altScrollMessageTimer);
+						altScrollMessageTimer = null;
+					}
+				}
 				let mouse = mousePos(evt);
 				let wheel = wheelDelta(evt);
 				if (this._zoom>=this._maxZoom && wheel>0) return;
@@ -478,8 +515,14 @@ class VideoRect extends paella.DomNode {
 		}
 	}
 
+	get canvasData() {
+		let canvasType = this._stream && Array.isArray(this._stream.canvas) && this._stream.canvas[0];
+		let canvasData = canvasType && paella.getVideoCanvasData(this._stream.canvas[0]) || { mouseEventsSupport: false, webglSupport: false };
+		return canvasData;
+	}
+
 	allowZoom() {
-		return true;
+		return !this.canvasData.mouseEventsSupport;
 	}
 
 	setZoom(zoom,left,top,tween=0) {
@@ -547,6 +590,10 @@ class VideoElementBase extends paella.VideoRect {
 		this._videoQualityStrategy = null;
 		
 		if (this._stream.preview) this.setPosterFrame(this._stream.preview);
+
+		if (this.canvasData.mouseEventsSupport) {
+			this.disableEventCapture();
+		}
 	}
 
 	get ready() { return this._ready; }
@@ -555,6 +602,13 @@ class VideoElementBase extends paella.VideoRect {
 	defaultProfile() {
 		return null;
 	}
+
+	// Synchronous functions: returns null if the resource is not loaded. Use only if 
+	// the resource is loaded.
+	get currentTimeSync() { return null; }
+	get volumeSync() { return null; }
+	get pausedSync() { return null; }
+	get durationSync() { return null; }
 
 	// Initialization functions
 	setVideoQualityStrategy(strategy) {
@@ -579,6 +633,28 @@ class VideoElementBase extends paella.VideoRect {
 
 	supportAutoplay() {
 		return true;
+	}
+
+	// Video canvas functions
+	videoCanvas() {
+		return Promise.reject(new Error("VideoElementBase::videoCanvas(): Not implemented in child class."));
+	}
+
+	// Multi audio functions
+	supportsMultiaudio() {
+		return Promise.resolve(false);
+	}
+
+	getAudioTracks() {
+		return Promise.resolve([]);
+	}
+
+	setCurrentAudioTrack(trackId) {
+		return Promise.resolve(false);
+	}
+
+	getCurrentAudioTrack() {
+		return Promise.resolve(-1);
 	}
 
 	// Playback functions
@@ -736,7 +812,6 @@ class Html5Video extends paella.VideoElementBase {
 	constructor(id,stream,left,top,width,height,streamName) {
 		super(id,stream,'video',left,top,width,height);
 
-		this._posterFrame = null;
 		this._currentQuality = null;
 		this._autoplay = false;
 
@@ -751,8 +826,12 @@ class Html5Video extends paella.VideoElementBase {
 
 		this.video.preload = "auto";
 		this.video.setAttribute("playsinline","");
-		this.video.setAttribute("tabindex","-1");
+		//this.video.setAttribute("tabindex","-1");
 
+		this._configureVideoEvents(this.video);
+	}
+
+	_configureVideoEvents(videoElement) {
 		function onProgress(event) {
 			if (!this._ready && this.video.readyState==4) {
 				this._ready = true;
@@ -796,7 +875,19 @@ class Html5Video extends paella.VideoElementBase {
 		}
 	}
 	
-	get video() { return this.domElement; }
+	get buffered() {
+		return this.video && this.video.buffered;
+	}
+
+	get video() {
+		if (this.domElementType=='video') {
+			return this.domElement;
+		}
+		else {
+			this._video = this._video || document.createElement('video');
+			return this._video;
+		}
+	}
 
 	get ready() {
 		// Fix Firefox specific issue when video reaches the end
@@ -810,6 +901,23 @@ class Html5Video extends paella.VideoElementBase {
 		return this.video.readyState>=3;
 	}
 
+	// Synchronous functions: returns null if the resource is not loaded. Use only if 
+	// the resource is loaded.
+	get currentTimeSync() {
+		return this.ready ? this.video.currentTime : null;
+	}
+
+	get volumeSync() {
+		return this.ready ? this.video.volume : null;
+	}
+
+	get pausedSync() {
+		return this.ready ? this.video.paused : null;
+	}
+
+	get durationSync() {
+		return this.ready ? this.video.duration : null;
+	}
 
 	_deferredAction(action) {
 		return new Promise((resolve,reject) => {
@@ -830,6 +938,7 @@ class Html5Video extends paella.VideoElementBase {
 				$(this.video).bind('canplay',() => {
 					processResult(action());
 					$(this.video).unbind('canplay');
+					$(this.video).unbind('loadedmetadata');
 				});
 			}
 		});
@@ -891,37 +1000,79 @@ class Html5Video extends paella.VideoElementBase {
 		}
 	}
 
+	videoCanvas() {
+		let canvasType = this._stream.canvas || ["video"];
+		return paella.getVideoCanvas(canvasType);
+	}
+
+	webGlDidLoad() {
+		return Promise.resolve();
+	}
+
 	load() {
-		var This = this;
-		var sources = this._stream.sources[this._streamName];
-		if (this._currentQuality===null && this._videoQualityStrategy) {
-			this._currentQuality = this._videoQualityStrategy.getQualityIndex(sources);
-		}
-
-		var stream = this._currentQuality<sources.length ? sources[this._currentQuality]:null;
-		this.video.innerText = "";
-		if (stream) {
-			var sourceElem = this.video.querySelector('source');
-			if (!sourceElem) {
-				sourceElem = document.createElement('source');
-				this.video.appendChild(sourceElem);
+		return new Promise((resolve,reject) => {
+			var sources = this._stream.sources[this._streamName];
+			if (this._currentQuality===null && this._videoQualityStrategy) {
+				this._currentQuality = this._videoQualityStrategy.getQualityIndex(sources);
 			}
-			if (this._posterFrame) {
-				this.video.setAttribute("poster",this._posterFrame);
-			}
+	
+			var stream = this._currentQuality<sources.length ? sources[this._currentQuality]:null;
+			this.video.innerText = "";
+			this.videoCanvas()
+				.then((CanvasClass) => {
+					let canvasInstance = new CanvasClass(stream);
+					this._zoomAvailable = canvasInstance.allowZoom();
 
-			sourceElem.src = stream.src;
-			sourceElem.type = stream.type;
-			this.video.load();
-			this.video.playbackRate = this._playbackRate;
+					if (window.$paella_bg && bg.app && canvasInstance instanceof bg.app.WindowController) {
+						// WebGL canvas
+						this.domElementType = 'canvas';
+						if (stream) {
 
-			return this._deferredAction(function() {
-				return stream;
-			});
-		}
-		else {
-			return paella_DeferredRejected(new Error("Could not load video: invalid quality stream index"));
-		}
+							// WebGL engine load callback
+							return new Promise((webglResolve,webglReject) => {
+								this.webGlDidLoad()
+									.then(() => {
+										this.canvasController = null;
+										let mainLoop = bg.app.MainLoop.singleton;
+
+										mainLoop.updateMode = bg.app.FrameUpdate.AUTO;
+										mainLoop.canvas = this.domElement;
+										mainLoop.run(canvasInstance);
+										return this.loadVideoStream(canvasInstance,stream);
+									})
+
+									.then((canvas) => {
+										webglResolve(canvas);
+									})
+									.catch((err) => webglReject(err));
+							});
+						}
+						else {
+							Promise.reject(new Error("Invalid stream data."));
+						}
+					}
+					else {
+						return this.loadVideoStream(canvasInstance,stream);
+					}
+				})
+	
+				.then((canvas) => {
+					if (canvas && paella.WebGLCanvas && canvas instanceof paella.WebGLCanvas) {
+						this._video = canvas.video;
+						this._video.pause();
+						this._configureVideoEvents(this.video);
+					}
+					resolve(stream);
+				})
+	
+				.catch((err) => {
+					reject(err);
+				});
+		});
+	}
+
+	loadVideoStream(canvasInstance,stream) {
+		return canvasInstance.loadVideo(this,stream);
 	}
 
 	disable(isMainAudioPlayer) {
@@ -1026,7 +1177,7 @@ class Html5Video extends paella.VideoElementBase {
 
 	setCurrentTime(time) {
 		return this._deferredAction(() => {
-			time && !isNaN(time) && (this.video.currentTime = time);
+			(time == 0 || time) && !isNaN(time) && (this.video.currentTime = time);
 		});
 	}
 

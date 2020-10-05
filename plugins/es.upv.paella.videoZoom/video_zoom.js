@@ -76,8 +76,9 @@ paella.addPlugin(function() {
             function checkVisibility() {
                 let buttons = $('.videoZoomButton');
                 let thumbs = $('.videoZoom');
+                let showButtons = this.config.showButtons!==undefined ? this.config.showButtons : true;
                 if (this._visible && this._available) {
-                    buttons.show();
+                    showButtons ? buttons.show() : buttons.hide();
                     thumbs.show();
                 }
                 else {
@@ -113,7 +114,7 @@ paella.addPlugin(function() {
                     })
                 }
             });
-
+            
             let update = false;
             paella.events.bind(paella.events.play,(evt) => {
                 let updateThumbs = () => {
@@ -141,7 +142,7 @@ paella.addPlugin(function() {
                             $(thumb.thumbContainer).show();
                             let x = target.video.zoomOffset.x * 100 / target.video.zoom;
                             let y = target.video.zoomOffset.y * 100 / target.video.zoom;
-
+                            
                             let zoomRect = thumb.zoomRect;
                             $(zoomRect).css({
                                 left: x + '%',
@@ -186,7 +187,7 @@ paella.addPlugin(function() {
 });
 
 paella.addPlugin(function() {
-
+    
     return class VideoZoomToolbarPlugin extends paella.ButtonPlugin {
         getAlignment() { return 'right'; }
         getSubclass() { return "videoZoomToolbar"; }
@@ -204,9 +205,9 @@ paella.addPlugin(function() {
             onSuccess(paella.player.config.player.videoZoom.enabled &&
                         this.targetPlayer &&
                         this.targetPlayer.allowZoom());
-
+    
         }
-
+        
         buildContent(domElement) {
             paella.events.bind(paella.events.videoZoomChanged, (evt,target) => {
                 this.setText(Math.round(target.video.zoom) + "%");

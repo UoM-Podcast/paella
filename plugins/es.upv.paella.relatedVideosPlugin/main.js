@@ -1,4 +1,6 @@
 
+// Change this data delegate to read the related videos form an external source
+// Default behaviour is to get the related videos from the data.json file
 
 paella.addDataDelegate("relatedVideos",() => {
     return class RelatedVideoDataDelegate extends paella.DataDelegate {
@@ -55,7 +57,17 @@ paella.addPlugin(() => {
                 <img src="${ data.thumb }" alt="">
                 <p>${ data.title }</p>
                 `;
-                linkContainer.href = data.url;
+                linkContainer.addEventListener("click", function() {
+                    try {
+                        if (window.self !== window.top) {
+                            window.parent.document.dispatchEvent(new CustomEvent('paella-change-video', { detail: data }));
+                        }
+                    }
+                    catch (e) {
+
+                    }
+                    location.href = data.url;
+                });
                 return linkContainer;
             }
 
