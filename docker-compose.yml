@@ -1,0 +1,13 @@
+version: "2"
+services:
+    web:
+      image: nginx
+      ports:
+       - "80:80"
+      volumes:
+      - ./build:/var/www/html/paella
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      environment:
+       - NGINX_HOST=localhost
+       - NGINX_PORT=80
+      command: /bin/bash -c "exec nginx -g 'daemon off;'"
