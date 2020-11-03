@@ -6,7 +6,7 @@ paella.addPlugin(function() {
 		getIconClass() { return 'icon-volume-high'; }
 		getName() { return "es.upv.paella.volumeRangePlugin"; }
 		getDefaultToolTip() { return base.dictionary.translate("Volume"); }
-		getIndex() {return 9999;}
+		getIndex() {return 141;}
 
 		checkEnabled(onSuccess) {
 			this._tempMasterVolume = 0;
