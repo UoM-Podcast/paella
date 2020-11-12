@@ -46,7 +46,11 @@
     "audioMethods":[
       { "factory":"MultiformatAudioFactory", "enabled":false }
     ],
-    "defaultAudioTag": ""
+    "defaultAudioTag": "",
+    "slidesMarks":{
+      "enabled":true,
+      "color":"gray"
+    }
   },
   "defaultProfile":"manchester_presentation",
   "data":{
@@ -74,7 +78,7 @@
       "//******* Button plugins": "",
       "edu.harvard.dce.paella.flexSkipPlugin": {"enabled":true, "direction": "Rewind", "seconds": 10, "minWindowSize": 350, "ariaLabel": "Rewind 10 seconds"},
       "edu.harvard.dce.paella.flexSkipForwardPlugin": {"enabled":true, "direction": "Forward", "seconds": 30, "minWindowSize": 350, "ariaLabel": "Forward 10 seconds"},
-      "es.upv.paella.captionsPlugin": {"enabled":true, "searchOnCaptions":false, "minWindowSize": 350, "ariaLabel": "Subtitles"},
+      "es.upv.paella.captionsPlugin": {"enabled":true, "searchOnCaptions":true, "minWindowSize": 350, "ariaLabel": "Subtitles"},
       "es.upv.paella.extendedTabAdapterPlugin": {"enabled":false, "minWindowSize": 400},
       "es.upv.paella.footprintsPlugin": {"enabled":false},
       "es.upv.paella.frameControlPlugin":  {"enabled": true, "showFullPreview": "auto", "showCaptions":true, "minWindowSize": 450, "ariaLabel": "Show full preview" },
@@ -83,6 +87,7 @@
       "es.upv.paella.multipleQualitiesPlugin": {"enabled":false, "showWidthRes":true, "minWindowSize": 550, "minVisibleQuality": 240, "ariaLabel": "Change video quality"},
       "es.upv.paella.playbackRatePlugin": {"enabled":true, "availableRates": [0.75, 1, 1.25, 1.5], "minWindowSize": 500, "ariaLabel": "Playback rate"},
       "es.upv.paella.playPauseButtonPlugin": {"enabled":true, "ariaLabel": "Pause video"},
+      "es.upv.paella.cinemaModePlugin": {"enabled":true, "minWindowSize": 550, "ariaLabel": "Cinema mode"},
       "es.upv.paella.searchPlugin": {"enabled":false, "sortType":"time", "colorSearch":false, "minWindowSize": 550},
       "es.upv.paella.sharePlugin": {"enabled":false, "minWindowSize": 600},
       "es.upv.paella.themeChooserPlugin":  {"enabled":false, "minWindowSize": 600},
