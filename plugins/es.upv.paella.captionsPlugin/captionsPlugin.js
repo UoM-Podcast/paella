@@ -75,13 +75,13 @@ paella.addPlugin(function() {
 
 			self._searchOnCaptions = self.config.searchOnCaptions || false;
 
-			// play with default subtitle
-			paella.events.bind(paella.events.play, function (evt) {
+			// set active caption by default
+			$(this.button).click(function(event) {
 				if ((paella.captions.getAvailableLangs().length > 0) && (!paella.captions._activeCaptions)) {
 					paella.captions.setActiveCaptions(paella.captions.getAvailableLangs()[0].id);
 				};
-			});
-		}
+		});
+	}
 
 		cancelHideBar() {
 			var thisClass = this;
