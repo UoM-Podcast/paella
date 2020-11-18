@@ -85,7 +85,7 @@
       "es.upv.paella.fullScreenButtonPlugin": {"enabled":true, "reloadOnFullscreen":{ "enabled":true, "keepUserSelection":true }, "ariaLabel": "Switch full screen mode"},
       "es.upv.paella.helpPlugin": {"enabled":false, "langs":["en","es"], "minWindowSize": 650 },
       "es.upv.paella.multipleQualitiesPlugin": {"enabled":false, "showWidthRes":true, "minWindowSize": 550, "minVisibleQuality": 240, "ariaLabel": "Change video quality"},
-      "es.upv.paella.playbackRatePlugin": {"enabled":true, "availableRates": [0.75, 1, 1.25, 1.5], "minWindowSize": 500, "ariaLabel": "Playback rate"},
+      "es.upv.paella.playbackRatePlugin": {"enabled":true, "availableRates": [0.75, 1, 1.25, 1.5, 2], "minWindowSize": 500, "ariaLabel": "Playback rate"},
       "es.upv.paella.playPauseButtonPlugin": {"enabled":true, "ariaLabel": "Pause video"},
       "es.upv.paella.cinemaModePlugin": {"enabled":true, "minWindowSize": 550, "ariaLabel": "Cinema mode"},
       "es.upv.paella.searchPlugin": {"enabled":false, "sortType":"time", "colorSearch":false, "minWindowSize": 550},
