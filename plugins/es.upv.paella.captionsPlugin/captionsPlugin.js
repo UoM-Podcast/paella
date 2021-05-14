@@ -8,7 +8,7 @@ paella.addPlugin(function() {
 		getButtonType() { return paella.ButtonPlugin.type.popUpButton; }
 		getDefaultToolTip() { return base.dictionary.translate("Subtitles"); }
 		getIndex() { return 509; }
-		closeOnMouseOut() { return false; }
+		closeOnMouseOut() { return true; }
 
 		checkEnabled(onSuccess) {
 			this._searchTimerTime = 1500;
@@ -74,7 +74,14 @@ paella.addPlugin(function() {
 			self._activeCaptions = paella.captions.getActiveCaptions();
 
 			self._searchOnCaptions = self.config.searchOnCaptions || false;
-		}
+
+			// set active caption by default
+			$(this.button).click(function(event) {
+				if ((paella.captions.getAvailableLangs().length > 0) && (!paella.captions._activeCaptions)) {
+					paella.captions.setActiveCaptions(paella.captions.getAvailableLangs()[0].id);
+				};
+		});
+	}
 
 		cancelHideBar() {
 			var thisClass = this;

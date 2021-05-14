@@ -405,8 +405,44 @@ class VideoRect extends paella.DomNode {
 				paella.events.trigger(paella.events.videoZoomChanged,{ video:this });
 			}
 
+			let altScrollMessageContainer = document.createElement('div');
+			altScrollMessageContainer.className = "alt-scroll-message-container";
+			altScrollMessageContainer.innerHTML = "<p>" + paella.dictionary.translate("Use Alt+Scroll to zoom the video") + "</p>";
+			eventCapture.appendChild(altScrollMessageContainer);
+			$(altScrollMessageContainer).css({ opacity: 0.0 });
+			let altScrollMessageTimer = null;
+			function clearAltScrollMessage(animate = true) {
+				animate ? 
+					$(altScrollMessageContainer).animate({ opacity: 0.0 }) :
+					$(altScrollMessageContainer).css({ opacity: 0.0 });
+			}
+			function showAltScrollMessage() {
+				if (altScrollMessageTimer) {
+					clearTimeout(altScrollMessageTimer);
+					altScrollMessageTimer = null;
+				}
+				else {
+					$(altScrollMessageContainer).css({ opacity: 1.0 });
+				}
+				altScrollMessageTimer = setTimeout(() => {
+					clearAltScrollMessage();
+					altScrollMessageTimer = null;
+				}, 500);
+			}
+
 			$(eventCapture).on('mousewheel wheel',(evt) => {
 				if (!this.allowZoom() || !this._zoomAvailable) return;
+				if (!evt.altKey) {
+					showAltScrollMessage();
+					return;
+				}
+				else {
+					clearAltScrollMessage(false);
+					if (altScrollMessageTimer) {
+						clearTimeout(altScrollMessageTimer);
+						altScrollMessageTimer = null;
+					}
+				}
 				let mouse = mousePos(evt);
 				let wheel = wheelDelta(evt);
 				if (this._zoom>=this._maxZoom && wheel>0) return;
@@ -567,6 +603,13 @@ class VideoElementBase extends paella.VideoRect {
 		return null;
 	}
 
+	// Synchronous functions: returns null if the resource is not loaded. Use only if 
+	// the resource is loaded.
+	get currentTimeSync() { return null; }
+	get volumeSync() { return null; }
+	get pausedSync() { return null; }
+	get durationSync() { return null; }
+
 	// Initialization functions
 	setVideoQualityStrategy(strategy) {
 		this._videoQualityStrategy = strategy;
@@ -595,6 +638,23 @@ class VideoElementBase extends paella.VideoRect {
 	// Video canvas functions
 	videoCanvas() {
 		return Promise.reject(new Error("VideoElementBase::videoCanvas(): Not implemented in child class."));
+	}
+
+	// Multi audio functions
+	supportsMultiaudio() {
+		return Promise.resolve(false);
+	}
+
+	getAudioTracks() {
+		return Promise.resolve([]);
+	}
+
+	setCurrentAudioTrack(trackId) {
+		return Promise.resolve(false);
+	}
+
+	getCurrentAudioTrack() {
+		return Promise.resolve(-1);
 	}
 
 	// Playback functions
@@ -752,7 +812,6 @@ class Html5Video extends paella.VideoElementBase {
 	constructor(id,stream,left,top,width,height,streamName) {
 		super(id,stream,'video',left,top,width,height);
 
-		this._posterFrame = null;
 		this._currentQuality = null;
 		this._autoplay = false;
 
@@ -767,7 +826,7 @@ class Html5Video extends paella.VideoElementBase {
 
 		this.video.preload = "auto";
 		this.video.setAttribute("playsinline","");
-		this.video.setAttribute("tabindex","-1");
+		//this.video.setAttribute("tabindex","-1");
 
 		this._configureVideoEvents(this.video);
 	}
@@ -816,6 +875,10 @@ class Html5Video extends paella.VideoElementBase {
 		}
 	}
 	
+	get buffered() {
+		return this.video && this.video.buffered;
+	}
+
 	get video() {
 		if (this.domElementType=='video') {
 			return this.domElement;
@@ -838,6 +901,23 @@ class Html5Video extends paella.VideoElementBase {
 		return this.video.readyState>=3;
 	}
 
+	// Synchronous functions: returns null if the resource is not loaded. Use only if 
+	// the resource is loaded.
+	get currentTimeSync() {
+		return this.ready ? this.video.currentTime : null;
+	}
+
+	get volumeSync() {
+		return this.ready ? this.video.volume : null;
+	}
+
+	get pausedSync() {
+		return this.ready ? this.video.paused : null;
+	}
+
+	get durationSync() {
+		return this.ready ? this.video.duration : null;
+	}
 
 	_deferredAction(action) {
 		return new Promise((resolve,reject) => {
@@ -858,6 +938,7 @@ class Html5Video extends paella.VideoElementBase {
 				$(this.video).bind('canplay',() => {
 					processResult(action());
 					$(this.video).unbind('canplay');
+					$(this.video).unbind('loadedmetadata');
 				});
 			}
 		});
@@ -1096,7 +1177,7 @@ class Html5Video extends paella.VideoElementBase {
 
 	setCurrentTime(time) {
 		return this._deferredAction(() => {
-			time && !isNaN(time) && (this.video.currentTime = time);
+			(time == 0 || time) && !isNaN(time) && (this.video.currentTime = time);
 		});
 	}
 
