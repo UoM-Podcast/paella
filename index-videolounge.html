@@ -85,7 +85,7 @@
         "text": "English",
         "format": "vtt",
         "url": url,
-        "signed": url.includes("X-Amz-Security-Token")
+        "signed": url.includes("Key-Pair-Id") || url.includes("X-Amz-Security-Token")
       }];
     };
 
