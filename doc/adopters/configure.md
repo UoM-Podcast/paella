@@ -68,7 +68,9 @@ In this file we have all the setups concerning plugins.. streams.. compositions.
 
     "list": {
       "es.upv.paella.playPauseButtonPlugin": {"enabled":true},
-      "other.plugin": { "enabled": true, "other":"plugin configuration" }
+      "other.plugin_1": { "enabled": true, "minWindowSize": 400, "other":"plugin configuration" },
+      "other.plugin_2": { "enabled": true },
+      "other.plugin_3": { "enabled": false }
     }
   },
   "standalone" : {
@@ -104,10 +106,9 @@ Use "defaultProfile" for set the default video composition.
 
 Take a look to the [DataDelegate](../developers/paella_data.md) page.
 
-## How to specify the default audio tag?
+### How to use multiple audio tracks
 
-Use the "defaultAudioTag" property. If this property is not set, the default audio tag is the current language code of the browser.
-
+See the documentation about the [support of multiple audios in Paella Player 6.4](hls_multiaudio.md)
 
 ### Can I choose when a plugin is shown depending on the play mode ( embed, fullScreen, standard .. etc )?
 
