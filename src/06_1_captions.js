@@ -178,7 +178,10 @@ class Caption {
 			url: self._url,
 			cache:self._signed,
 			type: 'get',
-			dataType: "text"
+			dataType: "text",
+			xhrFields: {
+				withCredentials: true
+			}
 		})
 		.then(function(dataRaw){
 			var parser = captionParserManager._formats[self._format];			
