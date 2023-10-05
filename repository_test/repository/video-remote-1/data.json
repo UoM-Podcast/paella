@@ -46,5 +46,13 @@
 		}
 	],
 	"frameList": [
+	],
+	"captions": [
+		{
+			"lang": "es",
+			"text": "Español (traducción automática)",
+			"format": "vtt",
+			"url": "captions.es.vtt"
+		}
 	]
 }
