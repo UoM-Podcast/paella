@@ -8,7 +8,7 @@ paella.addPlugin(function() {
 		getButtonType() { return paella.ButtonPlugin.type.popUpButton; }
 		getDefaultToolTip() { return base.dictionary.translate("Subtitles"); }
 		getIndex() { return 509; }
-		closeOnMouseOut() { return true; }
+		closeOnMouseOut() { return false; }
 
 		checkEnabled(onSuccess) {
 			this._searchTimerTime = 1500;
